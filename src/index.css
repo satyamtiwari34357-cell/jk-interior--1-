@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #F5F2EB;
+  --color-bg-secondary: #E9E3D8;
+  --color-text: #181816;
+  --color-muted: #68645C;
+  --color-border: #D2CBC0;
+  --color-accent: #B7653F;
+  --color-dark: #211F1B;
+  --color-dark-text: #F5F2EB;
+}
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --color-ivory: #F5F2EB;
+  --color-sand: #E9E3D8;
+  --color-charcoal: #181816;
+  --color-warm-grey: #68645C;
+  --color-taupe: #D2CBC0;
+  --color-terracotta: #B7653F;
+  --color-espresso: #211F1B;
+  --color-gold-300: #e2ccaa;
+  --color-gold-400: #d4b88f;
+  --color-gold-500: #c5a880;
+  --color-gold-600: #ad8f65;
+  --color-dark-900: #0a0a0c;
+  --color-dark-800: #0f1013;
+  --color-dark-700: #18191f;
+  --color-dark-600: #23252d;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0c0d10;
+  color: #ede9e1;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-editorial {
+  font-family: var(--font-serif);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1013;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b2c34;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a880;
+}
+
+/* Architectural Smooth Transitions */
+.transition-architectural {
+  transition-property: transform, opacity, background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 400ms;
+}
+
+/* Subtle image hover scale */
+.hover-subtle-scale {
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-subtle-scale:hover {
+  transform: scale(1.03);
+}
+
+/* Keyframe for subtle upward reveal */
+@keyframes architecturalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-reveal {
+  animation: architecturalReveal 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mandatory Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+}
+
+
