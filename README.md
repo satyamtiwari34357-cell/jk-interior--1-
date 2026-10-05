@@ -15,7 +15,7 @@ npm install
 Create `.env` based on `.env.example`:
 
 ```bash
-DATABASE_URL="<connection string from your PostgreSQL provider>"
+DATABASE_URL="YOUR_DATABASE_URL"
 PEXELS_API_KEY=""
 
 # Cloudinary Storage

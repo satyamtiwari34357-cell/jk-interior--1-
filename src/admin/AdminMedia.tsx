@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Image as ImageIcon,
   Upload,
@@ -9,8 +9,8 @@ import {
   ExternalLink,
   Check,
   X,
-  Loader2
-} from 'lucide-react';
+  Loader2,
+} from "lucide-react";
 
 interface AdminMediaProps {
   token: string;
@@ -19,23 +19,27 @@ interface AdminMediaProps {
 export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
   const [mediaItems, setMediaItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [sourceFilter, setSourceFilter] = useState('ALL');
+  const [search, setSearch] = useState("");
+  const [sourceFilter, setSourceFilter] = useState("ALL");
   const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const loadMedia = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/media?search=${encodeURIComponent(search)}&source=${sourceFilter}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(
+        `/api/admin/media?search=${encodeURIComponent(search)}&source=${sourceFilter}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (res.ok) {
         const data = await res.json();
         setMediaItems(data.media || []);
       }
     } catch (err) {
-      console.error('Failed to load media:', err);
+      console.error("Failed to load media:", err);
     } finally {
       setLoading(false);
     }
@@ -50,97 +54,110 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
     if (!files || files.length === 0) return;
 
     setUploading(true);
+    setUploadError(null);
     try {
       // 1. Request signature from server
-      const sigRes = await fetch('/api/sign-cloudinary-params', {
-        method: 'POST',
+      const sigRes = await fetch("/api/sign-cloudinary-params", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ folder: 'jk-interior/media' })
+        body: JSON.stringify({ folder: "jk-interior/media" }),
       });
+      if (!sigRes.ok) throw new Error("Unable to prepare Cloudinary upload.");
       const sigData = await sigRes.json();
+      if (!sigData.configured) {
+        throw new Error(
+          "Cloudinary is not configured. Uploaded files cannot be saved yet.",
+        );
+      }
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        let assetUrl = '';
+        let assetUrl = "";
         let publicId = null;
 
         if (sigData.configured) {
           const formData = new FormData();
-          formData.append('file', file);
-          formData.append('api_key', sigData.apiKey);
-          formData.append('timestamp', sigData.timestamp.toString());
-          formData.append('signature', sigData.signature);
-          formData.append('folder', sigData.folder);
+          formData.append("file", file);
+          formData.append("api_key", sigData.apiKey);
+          formData.append("timestamp", sigData.timestamp.toString());
+          formData.append("signature", sigData.signature);
+          formData.append("folder", sigData.folder);
 
-          const cRes = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`, {
-            method: 'POST',
-            body: formData
-          });
-
-          if (cRes.ok) {
-            const cJson = await cRes.json();
-            assetUrl = cJson.secure_url || cJson.url;
-            publicId = cJson.public_id;
-          }
-        } else {
-          assetUrl = URL.createObjectURL(file);
-        }
-
-        if (assetUrl) {
-          await fetch('/api/admin/media', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
+          const cRes = await fetch(
+            `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`,
+            {
+              method: "POST",
+              body: formData,
             },
-            body: JSON.stringify({
-              url: assetUrl,
-              publicId,
-              filename: file.name,
-              originalFilename: file.name,
-              mimeType: file.type,
-              format: file.name.split('.').pop() || 'jpg',
-              source: 'JK_INTERIOR',
-              folder: 'jk-interior/media'
-            })
-          });
+          );
+
+          if (!cRes.ok) throw new Error(`Cloudinary rejected ${file.name}.`);
+          const cJson = await cRes.json();
+          assetUrl = cJson.secure_url || cJson.url;
+          publicId = cJson.public_id;
+          if (!assetUrl)
+            throw new Error(`Cloudinary returned no URL for ${file.name}.`);
         }
+
+        const saveRes = await fetch("/api/admin/media", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            url: assetUrl,
+            publicId,
+            filename: file.name,
+            originalFilename: file.name,
+            mimeType: file.type,
+            format: file.name.split(".").pop() || "jpg",
+            source: "JK_INTERIOR",
+            folder: "jk-interior/media",
+          }),
+        });
+        if (!saveRes.ok)
+          throw new Error(`Unable to save ${file.name} to the media library.`);
       }
 
       await loadMedia();
     } catch (err) {
-      console.error('Media upload error:', err);
+      console.error("Media upload error:", err);
+      setUploadError(
+        err instanceof Error
+          ? err.message
+          : "Media upload failed. Please try again.",
+      );
     } finally {
       setUploading(false);
     }
   };
 
   const handleDelete = async (id: string, publicId?: string) => {
-    if (!window.confirm('Delete this media asset?')) return;
+    if (!window.confirm("Delete this media asset?")) return;
     try {
       const res = await fetch(`/api/admin/media/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ publicId })
+        body: JSON.stringify({ publicId }),
       });
       if (res.ok) {
         setSelectedAsset(null);
         await loadMedia();
       }
     } catch (err) {
-      console.error('Failed to delete media asset:', err);
+      console.error("Failed to delete media asset:", err);
     }
   };
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
@@ -148,13 +165,18 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
             Media Library & Cloudinary Assets
           </h2>
           <p className="text-xs text-[#9f9b90] mt-0.5">
-            Cloud-hosted photography for project portfolios, joinery ateliers, and architectural references.
+            Cloud-hosted photography for project portfolios, joinery ateliers,
+            and architectural references.
           </p>
         </div>
 
         <label className="px-4 py-2 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#c5a880]/15">
-          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-          <span>{uploading ? 'Uploading...' : 'Upload Media'}</span>
+          {uploading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Upload className="w-4 h-4" />
+          )}
+          <span>{uploading ? "Uploading..." : "Upload Media"}</span>
           <input
             type="file"
             multiple
@@ -164,6 +186,12 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
           />
         </label>
       </div>
+
+      {uploadError && (
+        <p role="alert" className="text-xs text-red-300">
+          {uploadError}
+        </p>
+      )}
 
       {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -194,13 +222,17 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
       {loading ? (
         <div className="py-20 text-center space-y-3">
           <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">Loading media assets...</p>
+          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">
+            Loading media assets...
+          </p>
         </div>
       ) : mediaItems.length === 0 ? (
         <div className="py-16 text-center text-[#8e8a7f] space-y-3 bg-[#121319] rounded-xl border border-white/5 p-8">
           <ImageIcon className="w-8 h-8 text-[#c5a880]/40 mx-auto" />
           <p className="text-base font-serif text-[#fbf9f5]">No media found.</p>
-          <p className="text-xs text-[#6e6a60]">Upload professional photography or connect your Cloudinary cloud.</p>
+          <p className="text-xs text-[#6e6a60]">
+            Upload professional photography or connect your Cloudinary cloud.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -256,24 +288,40 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
 
               <div className="space-y-3 text-xs text-[#cfc9be]">
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">Source Classification</span>
-                  <span className="font-mono text-[#c5a880]">{selectedAsset.source || 'JK_INTERIOR'}</span>
+                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                    Source Classification
+                  </span>
+                  <span className="font-mono text-[#c5a880]">
+                    {selectedAsset.source || "JK_INTERIOR"}
+                  </span>
                 </div>
 
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">Dimensions & Format</span>
-                  <span>{selectedAsset.width || 1600} x {selectedAsset.height || 1066} ({selectedAsset.format?.toUpperCase() || 'JPG'})</span>
+                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                    Dimensions & Format
+                  </span>
+                  <span>
+                    {selectedAsset.width || 1600} x{" "}
+                    {selectedAsset.height || 1066} (
+                    {selectedAsset.format?.toUpperCase() || "JPG"})
+                  </span>
                 </div>
 
                 {selectedAsset.publicId && (
                   <div>
-                    <span className="text-[10px] text-[#8e8a7f] uppercase block">Cloudinary Public ID</span>
-                    <span className="font-mono text-[11px] text-white/80 break-all">{selectedAsset.publicId}</span>
+                    <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                      Cloudinary Public ID
+                    </span>
+                    <span className="font-mono text-[11px] text-white/80 break-all">
+                      {selectedAsset.publicId}
+                    </span>
                   </div>
                 )}
 
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">Direct URL</span>
+                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                    Direct URL
+                  </span>
                   <a
                     href={selectedAsset.secureUrl || selectedAsset.url}
                     target="_blank"
@@ -287,7 +335,9 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
 
                 <div className="pt-4 border-t border-white/10 flex items-center justify-between">
                   <button
-                    onClick={() => handleDelete(selectedAsset.id, selectedAsset.publicId)}
+                    onClick={() =>
+                      handleDelete(selectedAsset.id, selectedAsset.publicId)
+                    }
                     className="py-2 px-3 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded flex items-center gap-1.5 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -306,7 +356,6 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

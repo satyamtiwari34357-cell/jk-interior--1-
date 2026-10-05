@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   ArrowLeft,
   Upload,
@@ -11,8 +11,8 @@ import {
   AlertTriangle,
   Loader2,
   Save,
-  Globe
-} from 'lucide-react';
+  Globe,
+} from "lucide-react";
 
 interface ProjectImageItem {
   id?: string;
@@ -24,7 +24,7 @@ interface ProjectImageItem {
   caption?: string;
   sortOrder: number;
   isCover: boolean;
-  source: 'JK_INTERIOR' | 'INSPIRATION' | 'CONCEPT';
+  source: "JK_INTERIOR" | "INSPIRATION" | "CONCEPT";
   isConcept: boolean;
 }
 
@@ -39,27 +39,51 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
   initialData,
   onSave,
   onCancel,
-  token
+  token,
 }) => {
-  const [title, setTitle] = useState(initialData?.title || '');
-  const [slug, setSlug] = useState(initialData?.slug || '');
-  const [location, setLocation] = useState(initialData?.location || 'Worli, Mumbai');
-  const [category, setCategory] = useState(initialData?.category || 'Penthouse');
-  const [propertyType, setPropertyType] = useState(initialData?.propertyType || 'Duplex Penthouse');
-  const [year, setYear] = useState(initialData?.year || new Date().getFullYear().toString());
-  const [area, setArea] = useState(initialData?.area || '4,500 sq.ft');
-  const [shortDescription, setShortDescription] = useState(initialData?.shortDescription || '');
-  const [fullDescription, setFullDescription] = useState(initialData?.fullDescription || '');
-  const [concept, setConcept] = useState(initialData?.concept || '');
-  const [scopeOfWork, setScopeOfWork] = useState(initialData?.scopeOfWork || 'Full Turnkey Civil & Joinery');
-  const [materials, setMaterials] = useState<string>(
-    Array.isArray(initialData?.materials) ? initialData.materials.join(', ') : 'Italian Statuario, Smoked European Oak, Champagne Brass'
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [slug, setSlug] = useState(initialData?.slug || "");
+  const [location, setLocation] = useState(
+    initialData?.location || "Worli, Mumbai",
   );
-  const [featured, setFeatured] = useState<boolean>(Boolean(initialData?.featured));
-  const [isConcept, setIsConcept] = useState<boolean>(Boolean(initialData?.isConcept));
-  const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED'>(initialData?.status || 'DRAFT');
-  const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || '');
-  const [seoDescription, setSeoDescription] = useState(initialData?.seoDescription || '');
+  const [category, setCategory] = useState(
+    initialData?.category || "Penthouse",
+  );
+  const [propertyType, setPropertyType] = useState(
+    initialData?.propertyType || "Duplex Penthouse",
+  );
+  const [year, setYear] = useState(
+    initialData?.year || new Date().getFullYear().toString(),
+  );
+  const [area, setArea] = useState(initialData?.area || "4,500 sq.ft");
+  const [shortDescription, setShortDescription] = useState(
+    initialData?.shortDescription || "",
+  );
+  const [fullDescription, setFullDescription] = useState(
+    initialData?.fullDescription || "",
+  );
+  const [concept, setConcept] = useState(initialData?.concept || "");
+  const [scopeOfWork, setScopeOfWork] = useState(
+    initialData?.scopeOfWork || "Full Turnkey Civil & Joinery",
+  );
+  const [materials, setMaterials] = useState<string>(
+    Array.isArray(initialData?.materials)
+      ? initialData.materials.join(", ")
+      : "Italian Statuario, Smoked European Oak, Champagne Brass",
+  );
+  const [featured, setFeatured] = useState<boolean>(
+    Boolean(initialData?.featured),
+  );
+  const [isConcept, setIsConcept] = useState<boolean>(
+    Boolean(initialData?.isConcept),
+  );
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">(
+    initialData?.status || "DRAFT",
+  );
+  const [seoTitle, setSeoTitle] = useState(initialData?.seoTitle || "");
+  const [seoDescription, setSeoDescription] = useState(
+    initialData?.seoDescription || "",
+  );
 
   // Gallery
   const [images, setImages] = useState<ProjectImageItem[]>(
@@ -68,17 +92,17 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
           ...img,
           sortOrder: img.sortOrder ?? idx,
           isCover: Boolean(img.isCover || idx === 0),
-          source: img.source || 'JK_INTERIOR',
-          isConcept: Boolean(img.isConcept)
+          source: img.source || "JK_INTERIOR",
+          isConcept: Boolean(img.isConcept),
         }))
-      : []
+      : [],
   );
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [urlInput, setUrlInput] = useState('');
+  const [urlInput, setUrlInput] = useState("");
 
   // Auto-generate slug from title
   const handleTitleChange = (val: string) => {
@@ -87,8 +111,8 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
       setSlug(
         val
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)+/g, '')
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, ""),
       );
     }
   };
@@ -98,15 +122,15 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
     if (!urlInput.trim()) return;
     const newImg: ProjectImageItem = {
       url: urlInput.trim(),
-      alt: `${title || 'Project'} interior view`,
-      caption: '',
+      alt: `${title || "Project"} interior view`,
+      caption: "",
       sortOrder: images.length,
       isCover: images.length === 0,
-      source: isConcept ? 'CONCEPT' : 'JK_INTERIOR',
-      isConcept
+      source: isConcept ? "CONCEPT" : "JK_INTERIOR",
+      isConcept,
     };
-    setImages(prev => [...prev, newImg]);
-    setUrlInput('');
+    setImages((prev) => [...prev, newImg]);
+    setUrlInput("");
   };
 
   // Cloudinary / File Picker upload handler
@@ -119,69 +143,73 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
 
     try {
       // 1. Request signature from server
-      const sigRes = await fetch('/api/sign-cloudinary-params', {
-        method: 'POST',
+      const sigRes = await fetch("/api/sign-cloudinary-params", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ folder: `jk-interior/projects/${slug || 'new'}` })
+        body: JSON.stringify({
+          folder: `jk-interior/projects/${slug || "new"}`,
+        }),
       });
+      if (!sigRes.ok) throw new Error("Unable to prepare Cloudinary upload.");
       const sigData = await sigRes.json();
+      if (!sigData.configured) {
+        throw new Error(
+          "Cloudinary is not configured. Uploaded files cannot be saved yet.",
+        );
+      }
 
       const newUploadedImages: ProjectImageItem[] = [];
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        setUploadProgress(`Uploading ${i + 1} of ${files.length}: ${file.name}`);
+        setUploadProgress(
+          `Uploading ${i + 1} of ${files.length}: ${file.name}`,
+        );
 
         if (sigData.configured) {
           // Upload directly to Cloudinary using signed parameters
           const formData = new FormData();
-          formData.append('file', file);
-          formData.append('api_key', sigData.apiKey);
-          formData.append('timestamp', sigData.timestamp.toString());
-          formData.append('signature', sigData.signature);
-          formData.append('folder', sigData.folder);
+          formData.append("file", file);
+          formData.append("api_key", sigData.apiKey);
+          formData.append("timestamp", sigData.timestamp.toString());
+          formData.append("signature", sigData.signature);
+          formData.append("folder", sigData.folder);
 
           const cRes = await fetch(
             `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`,
-            { method: 'POST', body: formData }
+            { method: "POST", body: formData },
           );
 
-          if (cRes.ok) {
-            const cJson = await cRes.json();
-            newUploadedImages.push({
-              url: cJson.secure_url || cJson.url,
-              secureUrl: cJson.secure_url,
-              publicId: cJson.public_id,
-              filename: file.name,
-              alt: `${title || 'Project'} interior view`,
-              sortOrder: images.length + newUploadedImages.length,
-              isCover: images.length === 0 && newUploadedImages.length === 0,
-              source: isConcept ? 'CONCEPT' : 'JK_INTERIOR',
-              isConcept
-            });
-          }
-        } else {
-          // If Cloudinary keys are not yet present in environment, use local object URL / mock registration
-          const localUrl = URL.createObjectURL(file);
+          if (!cRes.ok) throw new Error(`Cloudinary rejected ${file.name}.`);
+          const cJson = await cRes.json();
+          const imageUrl = cJson.secure_url || cJson.url;
+          if (!imageUrl)
+            throw new Error(`Cloudinary returned no URL for ${file.name}.`);
           newUploadedImages.push({
-            url: localUrl,
+            url: imageUrl,
+            secureUrl: cJson.secure_url,
+            publicId: cJson.public_id,
             filename: file.name,
-            alt: `${title || 'Project'} interior view`,
+            alt: `${title || "Project"} interior view`,
             sortOrder: images.length + newUploadedImages.length,
             isCover: images.length === 0 && newUploadedImages.length === 0,
-            source: isConcept ? 'CONCEPT' : 'JK_INTERIOR',
-            isConcept
+            source: isConcept ? "CONCEPT" : "JK_INTERIOR",
+            isConcept,
           });
         }
       }
 
-      setImages(prev => [...prev, ...newUploadedImages]);
+      setImages((prev) => [...prev, ...newUploadedImages]);
     } catch (err: any) {
-      console.error('Upload error:', err);
-      setErrorMsg('Failed to complete image upload. Please try again.');
+      console.error("Upload error:", err);
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Failed to complete image upload. Please try again.",
+      );
     } finally {
       setUploading(false);
       setUploadProgress(null);
@@ -190,18 +218,18 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
 
   // Reordering & Cover controls
   const setAsCover = (index: number) => {
-    setImages(prev =>
+    setImages((prev) =>
       prev.map((img, i) => ({
         ...img,
-        isCover: i === index
-      }))
+        isCover: i === index,
+      })),
     );
   };
 
-  const moveImage = (index: number, direction: 'up' | 'down') => {
-    setImages(prev => {
+  const moveImage = (index: number, direction: "up" | "down") => {
+    setImages((prev) => {
       const arr = [...prev];
-      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
       if (targetIndex < 0 || targetIndex >= arr.length) return prev;
       const temp = arr[index];
       arr[index] = arr[targetIndex];
@@ -211,17 +239,21 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
   };
 
   const removeImage = (index: number) => {
-    setImages(prev => {
+    setImages((prev) => {
       const filtered = prev.filter((_, i) => i !== index);
-      if (filtered.length > 0 && !filtered.some(img => img.isCover)) {
+      if (filtered.length > 0 && !filtered.some((img) => img.isCover)) {
         filtered[0].isCover = true;
       }
       return filtered;
     });
   };
 
-  const updateImageMeta = (index: number, field: keyof ProjectImageItem, val: any) => {
-    setImages(prev => {
+  const updateImageMeta = (
+    index: number,
+    field: keyof ProjectImageItem,
+    val: any,
+  ) => {
+    setImages((prev) => {
       const arr = [...prev];
       arr[index] = { ...arr[index], [field]: val };
       return arr;
@@ -229,20 +261,22 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
   };
 
   // Submit
-  const handleSubmit = async (submitStatus: 'DRAFT' | 'PUBLISHED') => {
+  const handleSubmit = async (submitStatus: "DRAFT" | "PUBLISHED") => {
     if (!title.trim() || !location.trim()) {
-      setErrorMsg('Title and location are required.');
+      setErrorMsg("Title and location are required.");
       return;
     }
 
     // Safety Rule Warning: Never publish concept images as real projects!
-    const hasConceptImages = images.some(img => img.isConcept || img.source !== 'JK_INTERIOR');
-    if (submitStatus === 'PUBLISHED' && (isConcept || hasConceptImages)) {
+    const hasConceptImages = images.some(
+      (img) => img.isConcept || img.source !== "JK_INTERIOR",
+    );
+    if (submitStatus === "PUBLISHED" && (isConcept || hasConceptImages)) {
       const proceed = window.confirm(
-        'Warning: This project is marked as a concept study or contains concept images. Concept visuals must NOT be published as completed JK Interior projects in the public portfolio. Would you like to save this project as a DRAFT instead?'
+        "Warning: This project is marked as a concept study or contains concept images. Concept visuals must NOT be published as completed JK Interior projects in the public portfolio. Would you like to save this project as a DRAFT instead?",
       );
       if (proceed) {
-        submitStatus = 'DRAFT';
+        submitStatus = "DRAFT";
       } else {
         return;
       }
@@ -252,8 +286,8 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
     setErrorMsg(null);
 
     const materialsArray = materials
-      .split(',')
-      .map(m => m.trim())
+      .split(",")
+      .map((m) => m.trim())
       .filter(Boolean);
 
     try {
@@ -275,10 +309,10 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
         status: submitStatus,
         seoTitle,
         seoDescription,
-        images
+        images,
       });
     } catch (err: any) {
-      setErrorMsg(err.message || 'Unable to save project.');
+      setErrorMsg(err.message || "Unable to save project.");
     } finally {
       setSaving(false);
     }
@@ -286,7 +320,6 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-16">
-      
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <button
@@ -300,7 +333,7 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => handleSubmit('DRAFT')}
+            onClick={() => handleSubmit("DRAFT")}
             disabled={saving}
             className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5"
           >
@@ -310,11 +343,15 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
 
           <button
             type="button"
-            onClick={() => handleSubmit('PUBLISHED')}
+            onClick={() => handleSubmit("PUBLISHED")}
             disabled={saving}
             className="px-5 py-2 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-[#c5a880]/15"
           >
-            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5" />}
+            {saving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Globe className="w-3.5 h-3.5" />
+            )}
             <span>Publish Project</span>
           </button>
         </div>
@@ -329,7 +366,6 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
 
       {/* Multi-Section Form */}
       <div className="space-y-6">
-
         {/* 1. Basic Information */}
         <div className="p-6 rounded-xl bg-[#121319] border border-white/5 space-y-4">
           <h3 className="text-sm uppercase tracking-wider text-[#c5a880] font-semibold border-b border-white/5 pb-2">
@@ -477,7 +513,8 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                 3. Project Imagery & Cloudinary Storage
               </h3>
               <p className="text-[11px] text-[#8e8a7f]">
-                Upload high-resolution photography. Set cover image and reorder gallery sequence.
+                Upload high-resolution photography. Set cover image and reorder
+                gallery sequence.
               </p>
             </div>
             <span className="text-xs font-mono text-[#a8a396]">
@@ -528,7 +565,7 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
           {uploading && (
             <div className="p-3 rounded bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-              <span>{uploadProgress || 'Processing upload...'}</span>
+              <span>{uploadProgress || "Processing upload..."}</span>
             </div>
           )}
 
@@ -539,7 +576,9 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                 <div
                   key={idx}
                   className={`p-3 rounded-lg border flex flex-col sm:flex-row items-center gap-4 transition-colors ${
-                    img.isCover ? 'bg-[#191a24] border-[#c5a880]' : 'bg-[#161720] border-white/5'
+                    img.isCover
+                      ? "bg-[#191a24] border-[#c5a880]"
+                      : "bg-[#161720] border-white/5"
                   }`}
                 >
                   <img
@@ -564,14 +603,18 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                       <input
                         type="text"
                         value={img.alt}
-                        onChange={(e) => updateImageMeta(idx, 'alt', e.target.value)}
+                        onChange={(e) =>
+                          updateImageMeta(idx, "alt", e.target.value)
+                        }
                         placeholder="Alt text (for accessibility)"
                         className="bg-[#111218] border border-white/10 rounded px-2.5 py-1 text-[11px] text-white"
                       />
                       <input
                         type="text"
-                        value={img.caption || ''}
-                        onChange={(e) => updateImageMeta(idx, 'caption', e.target.value)}
+                        value={img.caption || ""}
+                        onChange={(e) =>
+                          updateImageMeta(idx, "caption", e.target.value)
+                        }
                         placeholder="Optional caption"
                         className="bg-[#111218] border border-white/10 rounded px-2.5 py-1 text-[11px] text-white"
                       />
@@ -593,7 +636,7 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                     <button
                       type="button"
                       disabled={idx === 0}
-                      onClick={() => moveImage(idx, 'up')}
+                      onClick={() => moveImage(idx, "up")}
                       className="p-1.5 rounded hover:bg-white/10 text-white/50 hover:text-white disabled:opacity-30"
                       title="Move Up"
                     >
@@ -602,7 +645,7 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                     <button
                       type="button"
                       disabled={idx === images.length - 1}
-                      onClick={() => moveImage(idx, 'down')}
+                      onClick={() => moveImage(idx, "down")}
                       className="p-1.5 rounded hover:bg-white/10 text-white/50 hover:text-white disabled:opacity-30"
                       title="Move Down"
                     >
@@ -654,15 +697,14 @@ export const AdminProjectForm: React.FC<AdminProjectFormProps> = ({
                   Mark as Concept Study (isConcept = true)
                 </span>
                 <span className="text-[11px] text-[#8e8a7f]">
-                  Concept studies remain private or labeled "CONCEPT VISUAL" and are never shown as real completed projects.
+                  Concept studies remain private or labeled "CONCEPT VISUAL" and
+                  are never shown as real completed projects.
                 </span>
               </div>
             </label>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 };
