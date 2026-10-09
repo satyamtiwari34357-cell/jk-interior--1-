@@ -6,10 +6,8 @@ import { ProjectShowcase } from './components/ProjectShowcase.tsx';
 import { ProjectDetailView } from './components/ProjectDetailView.tsx';
 import { ServicesSection } from './components/ServicesSection.tsx';
 import { ServiceDetailView } from './components/ServiceDetailView.tsx';
-import { Estimator } from './components/Estimator.tsx';
 import { MaterialAtelier } from './components/MaterialAtelier.tsx';
 import { MoodboardDrawer } from './components/MoodboardDrawer.tsx';
-import { CraftsmanshipSection } from './components/CraftsmanshipSection.tsx';
 import { FounderStory } from './components/FounderStory.tsx';
 import { Testimonials } from './components/Testimonials.tsx';
 import { DarkCTA } from './components/DarkCTA.tsx';
@@ -21,6 +19,7 @@ import { MaterialSwatch } from './types.ts';
 import { MATERIALS } from './data/materials.ts';
 import { updatePageSeo } from './lib/seo.ts';
 import { initAnalytics, trackEvent } from './lib/analytics.ts';
+import { BeforeWeSpeak, BudgetGuidance, MobileContactBar, ProcessSection, QuickProjectPath, StyleQuiz, WhyJK } from './components/CustomerDiscovery.tsx';
 
 export default function App() {
   const [isAdminMode, setIsAdminMode] = useState<boolean>(() => {
@@ -119,7 +118,7 @@ export default function App() {
         if (hash === '#projects' || pathname === '/projects') {
           updatePageSeo({
             title: 'Projects | JK Interior',
-            description: 'Turnkey residential sanctuaries, penthouses, and bespoke commercial interiors in Mumbai.',
+            description: 'Browse residential and commercial interior projects by JK Interior in Mumbai.',
             canonicalPath: '/projects',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -130,7 +129,7 @@ export default function App() {
         } else if (hash === '#services' || pathname === '/services') {
           updatePageSeo({
             title: 'Interior Design Services | JK Interior',
-            description: 'Six foundational turnkey architectural disciplines executed under single-point accountability in Mumbai.',
+            description: 'Explore residential, commercial, office, luxury home, turnkey, and custom furniture services.',
             canonicalPath: '/services',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -141,7 +140,7 @@ export default function App() {
         } else if (hash === '#inspiration' || pathname === '/inspiration') {
           updatePageSeo({
             title: 'Interior Design Inspiration | JK Interior',
-            description: 'Explore 300+ curated architectural interior references across residential and commercial spaces.',
+            description: 'Explore design ideas for homes, offices, and commercial spaces.',
             canonicalPath: '/inspiration',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -152,7 +151,7 @@ export default function App() {
         } else if (hash === '#founder' || pathname === '/studio') {
           updatePageSeo({
             title: 'Studio | JK Interior',
-            description: 'Founded by master craftsman Kishorilal Sharma with 20+ years of dedicated practice in Mumbai.',
+            description: 'Meet JK Interior and Kishorilal Sharma, a Mumbai interior design studio with 20+ years of experience.',
             canonicalPath: '/studio',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -163,7 +162,7 @@ export default function App() {
         } else if (hash === '#craftsmanship' || pathname === '/process') {
           updatePageSeo({
             title: 'Our Process | JK Interior',
-            description: 'In-house workshop standards, 40,000 sq.ft Lower Parel atelier, and zero subcontracting methodology.',
+            description: 'See how JK Interior discovers, plans, designs, executes, and delivers interior projects.',
             canonicalPath: '/process',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -174,7 +173,7 @@ export default function App() {
         } else if (hash === '#contact' || pathname === '/contact') {
           updatePageSeo({
             title: 'Contact JK Interior | Book a Consultation',
-            description: 'Initiate your turnkey residence with master craftsman Kishorilal Sharma at our Sun Mill Compound studio in Lower Parel.',
+            description: 'Contact JK Interior to discuss a residential or commercial interior project in Mumbai.',
             canonicalPath: '/contact',
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -185,7 +184,7 @@ export default function App() {
         } else {
           updatePageSeo({
             title: 'JK Interior | Interior Design Studio in Mumbai',
-            description: 'Contemporary luxury interior design, architecture, and turnkey craftsmanship studio in Mumbai established by master craftsman Kishorilal Sharma with 20+ years of dedicated practice.',
+            description: 'JK Interior creates residential and commercial interiors across Mumbai.',
             canonicalPath: '/'
           });
           trackEvent('page_view', { page: 'home' });
@@ -225,24 +224,6 @@ export default function App() {
     setPrefillData({
       projectName,
       propertyType: 'Turnkey Luxury Residence'
-    });
-    setConsultationOpen(true);
-  };
-
-  const handleOpenConsultationWithScope = (scope: {
-    propertyType: string;
-    carpetArea: string;
-    tier: string;
-    budget: string;
-    timeline: string;
-  }) => {
-    setPrefillData({
-      propertyType: scope.propertyType,
-      carpetArea: scope.carpetArea,
-      tier: scope.tier,
-      budget: scope.budget,
-      timeline: scope.timeline,
-      materials: selectedMaterials.map(m => m.name)
     });
     setConsultationOpen(true);
   };
@@ -289,7 +270,7 @@ export default function App() {
   // If viewing a dedicated project detail route (/projects/:slug)
   if (activeProjectSlug) {
     return (
-      <div className="min-h-screen bg-[#F5F2EB] text-[#181816]">
+      <div className="min-h-screen bg-ivory text-charcoal">
         <ScrollProgress />
         <Navbar
           onOpenConsultation={() => {
@@ -322,6 +303,79 @@ export default function App() {
           onClose={() => setConsultationOpen(false)}
           prefillData={prefillData}
         />
+        <MobileContactBar onOpenConsultation={() => setConsultationOpen(true)} />
+      </div>
+    );
+  }
+
+  const isProjectsRoute = typeof window !== 'undefined' && window.location.pathname === '/projects';
+
+  if (isProjectsRoute) {
+    return (
+      <div className="min-h-screen bg-dark-800 text-ivory">
+        <ScrollProgress />
+        <Navbar
+          onOpenConsultation={() => {
+            setPrefillData({});
+            setConsultationOpen(true);
+          }}
+          onOpenMoodboard={() => setMoodboardOpen(true)}
+          moodboardCount={selectedMaterials.length}
+        />
+        <main>
+          <ProjectShowcase
+            onInquireProject={handleInquireProject}
+            onOpenConsultation={() => {
+              setPrefillData({});
+              setConsultationOpen(true);
+            }}
+          />
+        </main>
+        <Footer
+          onOpenConsultation={() => {
+            setPrefillData({});
+            setConsultationOpen(true);
+          }}
+        />
+        <ConsultationModal
+          isOpen={consultationOpen}
+          onClose={() => setConsultationOpen(false)}
+          prefillData={prefillData}
+        />
+        <MobileContactBar onOpenConsultation={() => setConsultationOpen(true)} />
+      </div>
+    );
+  }
+
+  if (window.location.pathname === '/inspiration') {
+    return (
+      <div className="min-h-screen bg-obsidian text-porcelain">
+        <ScrollProgress />
+        <Navbar
+          onOpenConsultation={() => setConsultationOpen(true)}
+          onOpenMoodboard={() => setMoodboardOpen(true)}
+          moodboardCount={selectedMaterials.length}
+        />
+        <main className="pt-24">
+          <header className="bg-ivory px-6 py-12 text-charcoal md:px-10">
+            <div className="mx-auto max-w-7xl">
+              <h1 className="font-serif text-4xl sm:text-5xl">Design Inspiration</h1>
+              <p className="mt-3 text-sm text-warm-grey">Explore ideas for homes, offices and commercial spaces. These images are inspiration, not JK Interior project photography.</p>
+            </div>
+          </header>
+          <DesignInspiration onOpenConsultationWithInspiration={handleOpenConsultationWithInspiration} />
+        </main>
+        <Footer onOpenConsultation={() => setConsultationOpen(true)} />
+        <MoodboardDrawer
+          isOpen={moodboardOpen}
+          onClose={() => setMoodboardOpen(false)}
+          selectedMaterials={selectedMaterials}
+          onRemoveMaterial={handleRemoveMaterial}
+          onClearAll={handleClearMoodboard}
+          onRequestSampleKit={handleRequestSampleKit}
+        />
+        <ConsultationModal isOpen={consultationOpen} onClose={() => setConsultationOpen(false)} prefillData={prefillData} />
+        <MobileContactBar onOpenConsultation={() => setConsultationOpen(true)} />
       </div>
     );
   }
@@ -329,7 +383,7 @@ export default function App() {
   // If viewing a dedicated service detail route (/services/:slug)
   if (activeServiceSlug) {
     return (
-      <div className="min-h-screen bg-[#F5F2EB] text-[#181816]">
+      <div className="min-h-screen bg-ivory text-charcoal">
         <ScrollProgress />
         <Navbar
           onOpenConsultation={() => {
@@ -362,13 +416,14 @@ export default function App() {
           onClose={() => setConsultationOpen(false)}
           prefillData={prefillData}
         />
+        <MobileContactBar onOpenConsultation={() => setConsultationOpen(true)} />
       </div>
     );
   }
 
   // Full Public Marketing Website
   return (
-    <div className="min-h-screen bg-[#0c0d10] text-[#ede9e1] selection:bg-[#B7653F] selection:text-white">
+    <div className="min-h-screen bg-obsidian text-porcelain selection:bg-terracotta selection:text-white">
       {/* Architectural Scroll Progress Indicator */}
       <ScrollProgress />
 
@@ -383,7 +438,7 @@ export default function App() {
       />
 
       <main>
-        {/* Cinematic Architectural Hero (Max 4-6 visuals, strong typography & composition) */}
+        {/* Hero */}
         <Hero
           onOpenConsultation={() => {
             setPrefillData({});
@@ -391,10 +446,7 @@ export default function App() {
           }}
         />
 
-        {/* 300+ Curated Design Inspiration Collection (Strictly Concept Visuals, Pexels Attribution) */}
-        <DesignInspiration
-          onOpenConsultationWithInspiration={handleOpenConsultationWithInspiration}
-        />
+        <QuickProjectPath />
 
         {/* Real JK Interior Projects Showcase (Strict Separation & Portfolio In Preparation notice) */}
         <ProjectShowcase
@@ -406,10 +458,7 @@ export default function App() {
           onOpenConsultationWithService={handleOpenConsultationWithService}
         />
 
-        {/* Interactive Turnkey Estimator */}
-        <Estimator
-          onOpenConsultationWithScope={handleOpenConsultationWithScope}
-        />
+        <WhyJK />
 
         {/* Virtual Material Atelier & Moodboard */}
         <MaterialAtelier
@@ -418,14 +467,21 @@ export default function App() {
           onOpenMoodboard={() => setMoodboardOpen(true)}
         />
 
-        {/* Workshop & Turnkey Methodology */}
-        <CraftsmanshipSection />
-
-        {/* Founder Story: Kishorilal Sharma */}
+        {/* Studio introduction */}
         <FounderStory />
+
+        <ProcessSection />
+
+        <DesignInspiration
+          onOpenConsultationWithInspiration={handleOpenConsultationWithInspiration}
+        />
 
         {/* Testimonials */}
         <Testimonials />
+
+        <StyleQuiz onOpenConsultation={() => setConsultationOpen(true)} />
+        <BeforeWeSpeak onOpenConsultation={() => setConsultationOpen(true)} />
+        <BudgetGuidance onOpenConsultation={() => setConsultationOpen(true)} />
       </main>
 
       {/* Signature Dark CTA */}
@@ -460,6 +516,7 @@ export default function App() {
         onClose={() => setConsultationOpen(false)}
         prefillData={prefillData}
       />
+      <MobileContactBar onOpenConsultation={() => setConsultationOpen(true)} />
     </div>
   );
 }

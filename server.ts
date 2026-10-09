@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
+import type { RequestHandler } from "express";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 
@@ -57,11 +59,52 @@ import { InspirationFilter } from "./src/types/visuals.ts";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+function createRateLimiter(maxRequests: number, windowMs: number): RequestHandler {
+  const requests = new Map<string, { count: number; resetAt: number }>();
+
+  return (req, res, next) => {
+    const key = req.ip || req.socket.remoteAddress || "unknown";
+    const now = Date.now();
+    const entry = requests.get(key);
+
+    if (!entry || entry.resetAt <= now) {
+      requests.set(key, { count: 1, resetAt: now + windowMs });
+    } else if (entry.count >= maxRequests) {
+      res.setHeader("Retry-After", Math.ceil((entry.resetAt - now) / 1000));
+      return res.status(429).json({ message: "Please wait before trying again." });
+    } else {
+      entry.count += 1;
+    }
+
+    if (requests.size > 2000) {
+      for (const [ip, record] of requests) {
+        if (record.resetAt <= now) requests.delete(ip);
+      }
+    }
+
+    next();
+  };
+}
+
+const limitPublicLeads = createRateLimiter(8, 15 * 60 * 1000);
+const limitAdminLogin = createRateLimiter(10, 15 * 60 * 1000);
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
-  app.use(express.json());
+  app.disable("x-powered-by");
+  app.use((req, res, next) => {
+    const requestId = randomUUID();
+    res.locals.requestId = requestId;
+    res.setHeader("X-Request-ID", requestId);
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    res.setHeader("Content-Security-Policy", "base-uri 'self'; object-src 'none'; frame-ancestors 'none'");
+    next();
+  });
+  app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 
   // --- PUBLIC API ROUTES ---
@@ -164,7 +207,7 @@ async function startServer() {
   });
 
   // 6. Consultation Leads Submission API (Server-side Zod validation + anti-spam + email notify)
-  app.post("/api/leads", async (req, res) => {
+  app.post("/api/leads", limitPublicLeads, async (req, res) => {
     try {
       const result = await createLead(req.body);
       if (!result.success) {
@@ -172,7 +215,7 @@ async function startServer() {
       }
       res.status(201).json(result);
     } catch (error) {
-      console.error("[API /api/leads] Error:", error);
+      console.error("[API /api/leads] Error:", res.locals.requestId, error);
       res.status(500).json({
         success: false,
         message:
@@ -182,21 +225,24 @@ async function startServer() {
   });
 
   // 7. Healthcheck
-  app.get("/api/health", (req, res) => {
-    res.json({
-      status: "ok",
-      database: Boolean(process.env.DATABASE_URL),
-      pexelsConfigured: Boolean(process.env.PEXELS_API_KEY),
-      cloudinaryConfigured: isCloudinaryConfigured(),
-      emailConfigured: Boolean(process.env.EMAIL_API_KEY),
-    });
+  app.get("/api/health", async (req, res) => {
+    let database: "connected" | "unconfigured" | "unavailable" = "unconfigured";
+    if (prisma) {
+      try {
+        await prisma.$queryRaw`SELECT 1`;
+        database = "connected";
+      } catch {
+        database = "unavailable";
+      }
+    }
+    res.json({ status: "ok", database });
   });
 
   // 8. Dynamic Production SEO Sitemap
   app.get("/sitemap.xml", async (req, res) => {
     try {
       const siteUrl =
-        process.env.NEXT_PUBLIC_SITE_URL ||
+        process.env.SITE_URL ||
         `${req.protocol}://${req.get("host")}`;
       const [projects, services] = await Promise.all([
         getPublishedProjects(),
@@ -256,7 +302,7 @@ async function startServer() {
   // 9. Robots.txt
   app.get("/robots.txt", (req, res) => {
     const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.SITE_URL ||
       `${req.protocol}://${req.get("host")}`;
     const robots = [
       "User-agent: *",
@@ -275,7 +321,7 @@ async function startServer() {
 
   // --- ADMIN AUTHENTICATION API ---
 
-  app.post("/api/admin/login", async (req, res) => {
+  app.post("/api/admin/login", limitAdminLogin, async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res
@@ -323,7 +369,13 @@ async function startServer() {
   // --- CLOUDINARY SIGNED UPLOADS (Admin Only) ---
   app.post("/api/sign-cloudinary-params", requireAdminAuth, (req, res) => {
     try {
-      const folder = req.body?.folder || "jk-interior/projects";
+      const folder = req.body?.folder;
+      const isProjectFolder =
+        typeof folder === "string" &&
+        /^jk-interior\/projects\/[a-z0-9-]{1,80}$/.test(folder);
+      if (folder !== "jk-interior/media" && !isProjectFolder) {
+        return res.status(400).json({ error: "Invalid upload folder." });
+      }
       const signatureData = generateUploadSignature(folder);
 
       if (!signatureData) {

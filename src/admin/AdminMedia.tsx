@@ -21,6 +21,7 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("ALL");
+  const [uploadSource, setUploadSource] = useState<"JK_INTERIOR" | "INSPIRATION" | "CONCEPT">("INSPIRATION");
   const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -52,6 +53,14 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
+    const invalidFile = Array.from(files).find((file) => !allowedTypes.has(file.type) || file.size > 25 * 1024 * 1024);
+    if (invalidFile) {
+      setUploadError("Choose a JPEG, PNG, WebP, or AVIF image up to 25 MB.");
+      e.target.value = "";
+      return;
+    }
 
     setUploading(true);
     setUploadError(null);
@@ -85,6 +94,7 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
           formData.append("timestamp", sigData.timestamp.toString());
           formData.append("signature", sigData.signature);
           formData.append("folder", sigData.folder);
+          formData.append("allowed_formats", sigData.allowedFormats);
 
           const cRes = await fetch(
             `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`,
@@ -115,7 +125,8 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
             originalFilename: file.name,
             mimeType: file.type,
             format: file.name.split(".").pop() || "jpg",
-            source: "JK_INTERIOR",
+            source: uploadSource,
+            isConcept: uploadSource !== "JK_INTERIOR",
             folder: "jk-interior/media",
           }),
         });
@@ -161,16 +172,22 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <h2 className="text-2xl font-serif text-[#fbf9f5]">
+          <h2 className="text-2xl font-serif text-ivory-soft">
             Media Library & Cloudinary Assets
           </h2>
-          <p className="text-xs text-[#9f9b90] mt-0.5">
+          <p className="text-xs text-stone-600 mt-0.5">
             Cloud-hosted photography for project portfolios, joinery ateliers,
             and architectural references.
           </p>
         </div>
 
-        <label className="px-4 py-2 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-md shadow-[#c5a880]/15">
+        <select aria-label="Uploaded image source" value={uploadSource} onChange={(e) => setUploadSource(e.target.value as typeof uploadSource)} className="bg-graphite border border-white/10 rounded-lg px-3 py-2 text-xs text-white">
+          <option value="INSPIRATION">External inspiration</option>
+          <option value="CONCEPT">Concept visual</option>
+          <option value="JK_INTERIOR">Verified JK Interior work</option>
+        </select>
+
+        <label className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-md shadow-gold-500/15">
           {uploading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
@@ -202,14 +219,14 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search assets by filename or alt description..."
-            className="w-full bg-[#121319] border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-[#c5a880] focus:outline-none"
+            className="w-full bg-graphite border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-gold-500 focus:outline-none"
           />
         </div>
 
         <select
           value={sourceFilter}
           onChange={(e) => setSourceFilter(e.target.value)}
-          className="bg-[#121319] border border-white/10 rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#c5a880] focus:outline-none"
+          className="bg-graphite border border-white/10 rounded-lg px-3.5 py-2 text-xs text-white focus:border-gold-500 focus:outline-none"
         >
           <option value="ALL">All Media Sources</option>
           <option value="JK_INTERIOR">JK Interior (Approved)</option>
@@ -221,16 +238,16 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
       {/* Media Grid */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">
+          <Loader2 className="w-8 h-8 text-gold-500 animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-widest text-stone-700">
             Loading media assets...
           </p>
         </div>
       ) : mediaItems.length === 0 ? (
-        <div className="py-16 text-center text-[#8e8a7f] space-y-3 bg-[#121319] rounded-xl border border-white/5 p-8">
-          <ImageIcon className="w-8 h-8 text-[#c5a880]/40 mx-auto" />
-          <p className="text-base font-serif text-[#fbf9f5]">No media found.</p>
-          <p className="text-xs text-[#6e6a60]">
+        <div className="py-16 text-center text-stone-700 space-y-3 bg-graphite rounded-xl border border-white/5 p-8">
+          <ImageIcon className="w-8 h-8 text-gold-500/40 mx-auto" />
+          <p className="text-base font-serif text-ivory-soft">No media found.</p>
+          <p className="text-xs text-warm-grey">
             Upload professional photography or connect your Cloudinary cloud.
           </p>
         </div>
@@ -240,7 +257,7 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
             <div
               key={item.id}
               onClick={() => setSelectedAsset(item)}
-              className="group relative cursor-pointer aspect-square bg-[#14151b] border border-white/5 rounded-lg overflow-hidden hover:border-[#c5a880]/50 transition-all"
+              className="group relative cursor-pointer aspect-square bg-graphite-strong border border-white/5 rounded-lg overflow-hidden hover:border-gold-500/50 transition-all"
             >
               <img
                 src={item.secureUrl || item.url}
@@ -252,7 +269,7 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
                 <span className="text-xs text-white font-medium truncate block">
                   {item.filename}
                 </span>
-                <span className="text-[10px] text-[#c5a880] font-mono block">
+                <span className="text-[10px] text-gold-500 font-mono block">
                   {item.format?.toUpperCase()} · {item.width}x{item.height}
                 </span>
               </div>
@@ -264,9 +281,9 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
       {/* Asset Detail Modal */}
       {selectedAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-          <div className="relative w-full max-w-2xl bg-[#121319] border border-white/10 rounded-xl p-6 space-y-5">
+          <div className="relative w-full max-w-2xl bg-graphite border border-white/10 rounded-xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-lg font-serif text-[#fbf9f5] truncate">
+              <h3 className="text-lg font-serif text-ivory-soft truncate">
                 {selectedAsset.filename}
               </h3>
               <button
@@ -286,18 +303,18 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
                 />
               </div>
 
-              <div className="space-y-3 text-xs text-[#cfc9be]">
+              <div className="space-y-3 text-xs text-taupe">
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                  <span className="text-[10px] text-stone-700 uppercase block">
                     Source Classification
                   </span>
-                  <span className="font-mono text-[#c5a880]">
+                  <span className="font-mono text-gold-500">
                     {selectedAsset.source || "JK_INTERIOR"}
                   </span>
                 </div>
 
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                  <span className="text-[10px] text-stone-700 uppercase block">
                     Dimensions & Format
                   </span>
                   <span>
@@ -309,7 +326,7 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
 
                 {selectedAsset.publicId && (
                   <div>
-                    <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                    <span className="text-[10px] text-stone-700 uppercase block">
                       Cloudinary Public ID
                     </span>
                     <span className="font-mono text-[11px] text-white/80 break-all">
@@ -319,17 +336,17 @@ export const AdminMedia: React.FC<AdminMediaProps> = ({ token }) => {
                 )}
 
                 <div>
-                  <span className="text-[10px] text-[#8e8a7f] uppercase block">
+                  <span className="text-[10px] text-stone-700 uppercase block">
                     Direct URL
                   </span>
                   <a
                     href={selectedAsset.secureUrl || selectedAsset.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#c5a880] hover:underline flex items-center gap-1 text-[11px] break-all"
+                    className="text-gold-500 hover:underline flex items-center gap-1 text-[11px] break-all"
                   >
                     <span>Open Full Resolution Asset</span>
-                    <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                    <ExternalLink className="w-3 h-3 shrink-0" />
                   </a>
                 </div>
 

@@ -101,20 +101,20 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
       {/* Editorial Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-white/10 pb-8">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#c5a880] mb-2 font-medium">
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold-500 mb-2 font-medium">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Curated Online Visuals</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#fbf9f5] font-light">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-ivory-soft font-light">
             Design Inspiration
           </h2>
         </div>
         <div className="max-w-md space-y-2">
-          <p className="text-sm text-[#a8a396] font-light leading-relaxed">
+          <p className="text-sm text-stone-500 font-light leading-relaxed">
             Explore a collection of interior references and design ideas across residential and commercial spaces.
           </p>
-          <div className="text-[11px] text-[#78746c] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c5a880]" />
+          <div className="text-[11px] text-stone-700 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
             <span>Strictly concept inspiration. Not presented as completed JK Interior projects.</span>
           </div>
         </div>
@@ -125,12 +125,14 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
         {filters.map((f) => (
           <button
             key={f}
+            type="button"
             onClick={() => setFilter(f)}
+            aria-pressed={filter === f}
             className={`px-4 py-2 text-xs uppercase tracking-wider rounded transition-all duration-200 whitespace-nowrap ${
               filter === f
-                ? 'bg-[#c5a880] text-[#0a0a0c] font-semibold shadow-md shadow-[#c5a880]/10'
-                : 'bg-white/5 text-[#a8a396] hover:text-[#fbf9f5] hover:bg-white/10 border border-white/5'
-            }`}
+                ? 'bg-gold-500 text-dark-900 font-semibold shadow-md shadow-gold-500/10'
+                : 'bg-white/5 text-stone-500 hover:text-ivory-soft hover:bg-white/10 border border-white/5'
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400`}
           >
             {f}
           </button>
@@ -140,13 +142,13 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
       {/* Loading Skeleton */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">Loading inspiration collection...</p>
+          <Loader2 className="w-8 h-8 text-gold-500 animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-widest text-stone-700">Loading inspiration collection...</p>
         </div>
       ) : visuals.length === 0 ? (
-        <div className="py-20 text-center text-[#8e8a7f] space-y-3 bg-[#121319] rounded-xl border border-white/5 p-8">
-          <p className="text-base font-serif text-[#fbf9f5]">No visual references found in this category.</p>
-          <p className="text-xs text-[#6e6a60]">Select another category or view All to explore 300+ interior concepts.</p>
+        <div className="py-20 text-center text-stone-700 space-y-3 bg-graphite rounded-xl border border-white/5 p-8">
+          <p className="text-base font-serif text-ivory-soft">No visual references found in this category.</p>
+          <p className="text-xs text-warm-grey">Select another category or view All to explore 300+ interior concepts.</p>
         </div>
       ) : (
         <>
@@ -157,10 +159,12 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
               const isFeatureCard = idx % 7 === 0;
 
               return (
-                <div
+                <button
                   key={visual.id}
+                  type="button"
                   onClick={() => setLightboxIndex(idx)}
-                  className={`group relative cursor-pointer flex flex-col bg-[#121318] border border-white/5 rounded-lg overflow-hidden hover:border-[#c5a880]/50 transition-all duration-400 hover:-translate-y-1 shadow-lg hover:shadow-2xl ${
+                  aria-label={`View inspiration: ${visual.alt}`}
+                  className={`group relative w-full text-left cursor-pointer flex flex-col bg-graphite-lighter border border-white/5 rounded-lg overflow-hidden hover:border-gold-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 ${
                     isFeatureCard ? 'sm:col-span-2' : ''
                   }`}
                 >
@@ -183,7 +187,7 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
                     <div className="absolute inset-0 bg-gradient-to-t from-[#121318] via-transparent to-transparent opacity-80" />
 
                     {/* Hover Overlay Arrow */}
-                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 opacity-0 group-hover:opacity-100 group-hover:bg-[#c5a880] group-hover:text-black transition-all duration-300">
+                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 opacity-0 group-hover:opacity-100 group-hover:bg-gold-500 group-hover:text-black transition-all duration-300">
                       <ArrowUpRight className="w-4 h-4" />
                     </div>
                   </div>
@@ -191,48 +195,49 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
                   {/* Card Content & Subtle Attribution */}
                   <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                     <div>
-                      <span className="text-[10px] uppercase tracking-widest text-[#8e8a7f] block font-sans">
+                      <span className="text-[10px] uppercase tracking-widest text-stone-700 block font-sans">
                         {visual.subcategory}
                       </span>
-                      <h4 className="text-sm font-serif text-[#fbf9f5] group-hover:text-[#c5a880] transition-colors mt-0.5 line-clamp-2">
+                      <h4 className="text-sm font-serif text-ivory-soft group-hover:text-gold-500 transition-colors mt-0.5 line-clamp-2">
                         {visual.alt}
                       </h4>
                     </div>
 
                     <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-[#7e7a70]">
                       <span className="truncate pr-2">
-                        Photo by <span className="text-[#c5a880]">{visual.photographer}</span>
+                        Photo by <span className="text-gold-500">{visual.photographer}</span>
                       </span>
-                      <span className="text-[10px] uppercase tracking-wider text-[#9a958a] flex-shrink-0">
+                      <span className="text-[10px] uppercase tracking-wider text-[#9a958a] shrink-0">
                         Pexels
                       </span>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
 
           {/* Load More & Pagination Bar */}
           <div className="mt-14 flex flex-col items-center justify-center gap-4">
-            <div className="text-xs text-[#8e8a7f]">
+            <div className="text-xs text-stone-700">
               Showing {visuals.length} of {totalCount} curated inspiration references
             </div>
 
             {hasMore ? (
               <button
+                type="button"
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="px-8 py-3.5 bg-white/5 hover:bg-white/10 border border-white/15 hover:border-[#c5a880]/60 text-[#f5f2eb] text-xs font-semibold uppercase tracking-widest rounded transition-all duration-200 flex items-center gap-2"
+                className="min-h-11 px-8 py-3.5 bg-white/5 hover:bg-white/10 active:scale-[0.99] border border-white/15 hover:border-gold-500/60 text-ivory text-xs font-semibold uppercase tracking-widest rounded transition-all duration-200 flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
               >
                 {loadingMore ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-[#c5a880]" />
+                    <Loader2 className="w-4 h-4 animate-spin text-gold-500" />
                     <span>Loading References...</span>
                   </>
                 ) : (
                   <>
-                    <Compass className="w-4 h-4 text-[#c5a880]" />
+                    <Compass className="w-4 h-4 text-gold-500" />
                     <span>Load More References</span>
                   </>
                 )}
@@ -254,7 +259,7 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
             href="https://www.pexels.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#c5a880] hover:underline font-medium"
+            className="text-gold-500 hover:underline font-medium"
           >
             Pexels
           </a>
@@ -268,19 +273,20 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
       {/* Consultation Conversion CTA */}
       <div className="mt-12 p-8 rounded-xl bg-gradient-to-r from-[#171822] via-[#14151b] to-[#171822] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
-          <h3 className="text-xl sm:text-2xl font-serif text-[#fbf9f5]">
+          <h3 className="text-xl sm:text-2xl font-serif text-ivory-soft">
             Inspired by these concepts?
           </h3>
-          <p className="text-xs sm:text-sm text-[#a8a396] font-light mt-1">
-            Bring your vision to life in Mumbai with JK Interior’s turnkey craftsmanship and Lower Parel joinery atelier.
+          <p className="text-xs sm:text-sm text-stone-500 font-light mt-1">
+            Tell us about the space you are planning and what you need help with.
           </p>
         </div>
         {onOpenConsultationWithInspiration && (
           <button
+            type="button"
             onClick={() => onOpenConsultationWithInspiration('Design Inspiration Collection')}
-            className="px-6 py-3 bg-[#c5a880] hover:bg-[#d4b88f] text-[#0a0a0c] text-xs font-semibold uppercase tracking-widest rounded whitespace-nowrap transition-colors shadow-lg shadow-[#c5a880]/10"
+            className="min-h-11 px-6 py-3 bg-gold-500 hover:bg-gold-400 active:scale-[0.99] text-dark-900 text-xs font-semibold uppercase tracking-widest rounded whitespace-nowrap transition-transform shadow-lg shadow-gold-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
           >
-            Schedule Consultation
+            Book a Consultation
           </button>
         )}
       </div>
@@ -293,6 +299,8 @@ export const DesignInspiration: React.FC<DesignInspirationProps> = ({
         onPrev={handlePrev}
         hasPrev={lightboxIndex !== null && lightboxIndex > 0}
         hasNext={lightboxIndex !== null && lightboxIndex < visuals.length - 1}
+        currentIndex={lightboxIndex ?? 0}
+        totalCount={visuals.length}
       />
     </section>
   );

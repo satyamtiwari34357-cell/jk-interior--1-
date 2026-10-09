@@ -1,8 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
 
 // Server-side only Cloudinary configuration
-const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME;
-const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || process.env.CLOUDINARY_API_KEY;
+const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+const apiKey = process.env.CLOUDINARY_API_KEY;
 const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
 if (cloudName && apiKey && apiSecret) {
@@ -20,6 +20,7 @@ export interface CloudinarySignatureResult {
   apiKey: string;
   cloudName: string;
   folder: string;
+  allowedFormats: string;
 }
 
 export function isCloudinaryConfigured(): boolean {
@@ -36,9 +37,11 @@ export function generateUploadSignature(folder: string = 'jk-interior/projects')
   }
 
   const timestamp = Math.round(new Date().getTime() / 1000);
+  const allowedFormats = "jpg,png,webp,avif";
   const paramsToSign = {
     timestamp,
-    folder
+    folder,
+    allowed_formats: allowedFormats,
   };
 
   const signature = cloudinary.utils.api_sign_request(paramsToSign, apiSecret);
@@ -48,7 +51,8 @@ export function generateUploadSignature(folder: string = 'jk-interior/projects')
     timestamp,
     apiKey,
     cloudName,
-    folder
+    folder,
+    allowedFormats,
   };
 }
 

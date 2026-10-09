@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Award, Compass, HeartHandshake, ShieldCheck, Quote } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { gsap, ScrollTrigger, MOTION_TOKENS, isReducedMotion } from '../lib/motion.ts';
 
 export const FounderStory: React.FC = () => {
@@ -64,95 +64,65 @@ export const FounderStory: React.FC = () => {
         
         {/* Architectural Atelier & Philosophy Plaque */}
         <div ref={plaqueRef} className="lg:col-span-5">
-          <div className="relative p-8 sm:p-10 rounded-xl bg-gradient-to-br from-[#161720] via-[#121319] to-[#0e0f14] border border-[#c5a880]/30 shadow-2xl flex flex-col justify-between space-y-8">
+          <div className="relative p-8 sm:p-10 rounded-xl bg-gradient-to-br from-graphite-deep via-graphite to-ink-soft border border-gold-500/30 shadow-2xl flex flex-col justify-between space-y-8">
             
             {/* Top Emblem & Kicker */}
             <div className="flex items-center justify-between border-b border-white/10 pb-6">
               <div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#c5a880] font-sans font-medium block">
-                  Founding Philosophy
+                <span className="text-[10px] uppercase tracking-[0.25em] text-gold-500 font-sans font-medium block">
+                  The Studio
                 </span>
-                <h3 className="text-2xl font-serif text-[#fbf9f5] mt-1">
+                <h3 className="text-2xl font-serif text-ivory-soft mt-1">
                   Kishorilal Sharma
                 </h3>
               </div>
-              <span className="text-xs font-mono text-[#c5a880] px-2.5 py-1 rounded bg-[#c5a880]/10 border border-[#c5a880]/20">
-                Estd. 1999
-              </span>
             </div>
 
             {/* Signature Quote */}
             <div className="space-y-4">
-              <Quote className="w-8 h-8 text-[#c5a880]/50" />
-              <blockquote className="text-base sm:text-lg font-serif italic text-[#ede8de] leading-relaxed">
-                "A true luxury interior is not about superficial gilding; it is the silent integrity of seamless joints and materials that breathe with time."
-              </blockquote>
-              <div className="text-xs text-[#9f9b90]">
-                <span className="text-[#c5a880] font-medium">— Kishorilal Sharma</span>, Master Craftsman & Founder
-              </div>
+              <p className="text-base sm:text-lg font-serif text-[#ede8de] leading-relaxed">JK Interior creates residential and commercial interiors across Mumbai.</p>
+              <p className="text-xs text-stone-600">Kishorilal Sharma · JK Interior</p>
             </div>
 
             {/* Studio Workshop Principles */}
             <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4 text-xs">
               <div>
-                <span className="text-[10px] uppercase text-[#7e7a70] block">Atelier Location</span>
-                <span className="text-[#ded9ce] font-medium mt-0.5 block">Sun Mill, Lower Parel</span>
+                <span className="text-[10px] uppercase text-[#7e7a70] block">Experience</span>
+                <span className="text-[#ded9ce] font-medium mt-0.5 block">20+ years</span>
               </div>
               <div>
-                <span className="text-[10px] uppercase text-[#7e7a70] block">Supervision Policy</span>
-                <span className="text-[#ded9ce] font-medium mt-0.5 block">Zero Subcontracting</span>
+                <span className="text-[10px] uppercase text-[#7e7a70] block">Completed projects</span>
+                <span className="text-[#ded9ce] font-medium mt-0.5 block">300+</span>
               </div>
             </div>
 
             {/* Terracotta signature accent line */}
-            <div className="h-[2px] w-16 bg-gradient-to-r from-[#B7653F] to-[#c5a880]" />
+            <div className="h-[2px] w-16 bg-gradient-to-r from-terracotta to-gold-500" />
 
           </div>
         </div>
 
         {/* Story Narrative */}
         <div ref={narrativeRef} className="lg:col-span-7 space-y-6">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#c5a880] font-medium">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold-500 font-medium">
             <Award className="w-3.5 h-3.5" />
-            <span>The Founder’s Legacy</span>
+              <span>JK Interior · Mumbai</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#fbf9f5] font-light leading-tight">
-            Craftsmanship Rooted in Truth to Materials
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-ivory-soft font-light leading-tight">
+            A studio for the spaces you use every day.
           </h2>
 
-          <div className="space-y-4 text-sm text-[#b8b3a8] font-light leading-relaxed">
+          <div className="space-y-4 text-sm text-stone-400 font-light leading-relaxed">
             <p>
-              In a metropolis where speed often eclipses substance, Kishorilal Sharma established JK Interior with a resolute belief: that exceptional residences are born in the workshop, not merely on a rendering screen.
+              Kishorilal Sharma leads JK Interior, a Mumbai studio working across residential and commercial interiors.
             </p>
             <p>
-              Beginning over two decades ago crafting bespoke teak millwork for South Mumbai’s historic Art Deco apartments, Kishorilal honed an instinctive mastery of timber moisture equilibrium, natural stone veining, and micro-tolerance joinery.
+              The studio brings more than 20 years of experience and has completed over 300 projects.
             </p>
             <p>
-              Today, JK Interior stands as a full-spectrum architecture and turnkey studio spanning 40,000 square feet of dedicated fabrication ateliers in Lower Parel. Kishorilal personally supervises every signature residence, maintaining a strict limit on concurrent projects to ensure uncompromised devotion.
+              Its team of approximately 30 people works with clients across Mumbai.
             </p>
-          </div>
-
-          {/* 3 Core Values */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/10 text-xs">
-            <div className="space-y-1.5">
-              <span className="text-sm font-serif text-[#fbf9f5] block">Direct Oversight</span>
-              <p className="text-[#888479]">
-                Kishorilal Sharma personally conducts weekly site reviews and joinery mockups.
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <span className="text-sm font-serif text-[#fbf9f5] block">Zero Compromise</span>
-              <p className="text-[#888479]">
-                Only certified European adhesives, Blum mechanics, and seasoned A-grade timbers.
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <span className="text-sm font-serif text-[#fbf9f5] block">Snag-Free Delivery</span>
-              <p className="text-[#888479]">
-                3-stage internal snag audit before client walkthrough and key handover.
-              </p>
-            </div>
           </div>
 
         </div>

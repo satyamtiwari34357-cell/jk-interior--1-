@@ -28,22 +28,22 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-white/10 pb-8">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#c5a880] mb-2">
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold-500 mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Virtual Sample Board</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#fbf9f5] font-light">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-ivory-soft font-light">
             The Material Atelier
           </h2>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <p className="text-sm text-[#a8a396] max-w-md font-light leading-relaxed">
-            Curate your architectural finishes. Add swatches to your bespoke moodboard to review physical samples at our Lower Parel studio.
+          <p className="text-sm text-stone-500 max-w-md font-light leading-relaxed">
+            Choose materials and add swatches to your moodboard to share the looks you like.
           </p>
           {selectedMaterialIds.length > 0 && (
             <button
               onClick={onOpenMoodboard}
-              className="px-4 py-2 bg-white/10 hover:bg-[#c5a880] hover:text-black border border-white/10 text-xs font-semibold uppercase tracking-wider rounded transition-colors whitespace-nowrap flex items-center gap-2"
+              className="px-4 py-2 bg-white/10 hover:bg-gold-500 hover:text-black border border-white/10 text-xs font-semibold uppercase tracking-wider rounded transition-colors whitespace-nowrap flex items-center gap-2"
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Review Palette ({selectedMaterialIds.length})</span>
@@ -60,8 +60,8 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
             onClick={() => setActiveCategory(cat)}
             className={`px-4 py-2 text-xs uppercase tracking-wider rounded transition-all duration-200 whitespace-nowrap ${
               activeCategory === cat
-                ? 'bg-[#c5a880] text-[#0a0a0c] font-semibold'
-                : 'bg-white/5 text-[#a8a396] hover:text-[#fbf9f5] hover:bg-white/10 border border-white/5'
+                ? 'bg-gold-500 text-dark-900 font-semibold'
+                : 'bg-white/5 text-stone-500 hover:text-ivory-soft hover:bg-white/10 border border-white/5'
             }`}
           >
             {cat}
@@ -76,7 +76,7 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
           return (
             <div
               key={material.id}
-              className="group bg-[#121319] border border-white/10 hover:border-[#c5a880]/60 rounded-lg overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl"
+              className="group bg-graphite border border-white/10 hover:border-gold-500/60 rounded-lg overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl"
             >
               <div>
                 {/* Material Texture Preview */}
@@ -86,10 +86,10 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
                     alt={material.name}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#121319] via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-graphite via-transparent to-transparent opacity-80" />
                   
                   {/* Origin tag */}
-                  <span className="absolute top-3 left-3 px-2 py-0.5 text-[9px] uppercase tracking-wider bg-black/70 backdrop-blur-sm text-[#d4b88f] rounded border border-white/10">
+                  <span className="absolute top-3 left-3 px-2 py-0.5 text-[9px] uppercase tracking-wider bg-black/70 backdrop-blur-sm text-gold-400 rounded border border-white/10">
                     {material.origin}
                   </span>
 
@@ -106,20 +106,20 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
                 {/* Details */}
                 <div className="p-5 space-y-3">
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#8e8a7f] block font-sans">
+                    <span className="text-[10px] uppercase tracking-widest text-stone-700 block font-sans">
                       {material.finish}
                     </span>
-                    <h3 className="text-lg font-serif text-[#fbf9f5] group-hover:text-[#c5a880] transition-colors">
+                    <h3 className="text-lg font-serif text-ivory-soft group-hover:text-gold-500 transition-colors">
                       {material.name}
                     </h3>
                   </div>
 
-                  <p className="text-xs text-[#a09c91] line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
                     {material.description}
                   </p>
 
                   <div className="pt-2 text-[11px] text-[#7a766c]">
-                    <span className="text-[#a8a49a] font-medium">Ideal For:</span> {material.idealApplication}
+                    <span className="text-stone-500 font-medium">Ideal For:</span> {material.idealApplication}
                   </div>
                 </div>
               </div>
@@ -130,7 +130,7 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
                   onClick={() => onToggleMaterial(material)}
                   className={`w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2 ${
                     isSelected
-                      ? 'bg-[#c5a880] text-[#0a0a0c]'
+                      ? 'bg-gold-500 text-dark-900'
                       : 'bg-white/5 hover:bg-white/10 text-[#d8d4cb] border border-white/10'
                   }`}
                 >
@@ -141,7 +141,7 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
                     </>
                   ) : (
                     <>
-                      <Plus className="w-3.5 h-3.5 text-[#c5a880]" />
+                      <Plus className="w-3.5 h-3.5 text-gold-500" />
                       <span>Add to Moodboard</span>
                     </>
                   )}
@@ -155,7 +155,7 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
       {/* Inspect Modal */}
       {inspectedMaterial && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-[#14151b] border border-white/10 rounded-lg p-6 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-lg bg-graphite-strong border border-white/10 rounded-lg p-6 space-y-5 animate-in fade-in zoom-in-95 duration-200">
             <div className="aspect-[16/9] w-full rounded overflow-hidden">
               <img
                 src={inspectedMaterial.imageUrl}
@@ -164,17 +164,17 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
               />
             </div>
             <div>
-              <span className="text-xs uppercase tracking-widest text-[#c5a880]">
+              <span className="text-xs uppercase tracking-widest text-gold-500">
                 {inspectedMaterial.category} · {inspectedMaterial.origin}
               </span>
-              <h3 className="text-2xl font-serif text-[#fbf9f5] mt-1">
+              <h3 className="text-2xl font-serif text-ivory-soft mt-1">
                 {inspectedMaterial.name}
               </h3>
             </div>
             <div className="space-y-2 text-xs text-[#b8b4a8] leading-relaxed">
               <p>{inspectedMaterial.description}</p>
               <div className="p-3 rounded bg-white/5 border border-white/5">
-                <span className="font-semibold text-[#c5a880] block mb-1">Tactile & Sensual Note:</span>
+                <span className="font-semibold text-gold-500 block mb-1">Tactile & Sensual Note:</span>
                 {inspectedMaterial.tactileNote}
               </div>
               <p>
@@ -194,7 +194,7 @@ export const MaterialAtelier: React.FC<MaterialAtelierProps> = ({
                   onToggleMaterial(inspectedMaterial);
                   setInspectedMaterial(null);
                 }}
-                className="px-5 py-2.5 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded"
+                className="px-5 py-2.5 bg-gold-500 hover:bg-gold-400 text-black text-xs font-semibold uppercase tracking-wider rounded"
               >
                 {selectedMaterialIds.includes(inspectedMaterial.id) ? 'Remove from Board' : 'Add to Moodboard'}
               </button>

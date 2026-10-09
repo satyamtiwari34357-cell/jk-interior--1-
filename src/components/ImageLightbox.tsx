@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { OnlineVisual } from '../types/visuals.ts';
 
@@ -9,6 +9,8 @@ interface ImageLightboxProps {
   onPrev: () => void;
   hasPrev: boolean;
   hasNext: boolean;
+  currentIndex: number;
+  totalCount: number;
 }
 
 export const ImageLightbox: React.FC<ImageLightboxProps> = ({
@@ -17,8 +19,12 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
   onNext,
   onPrev,
   hasPrev,
-  hasNext
+  hasNext,
+  currentIndex,
+  totalCount,
 }) => {
+  const touchStartX = useRef<number | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -27,14 +33,15 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
     };
 
     if (visual) {
+      const previousOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = previousOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
     }
 
-    return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
   }, [visual, hasNext, hasPrev, onClose, onNext, onPrev]);
 
   if (!visual) return null;
@@ -47,25 +54,30 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
     >
       {/* Background click to close */}
-      <div className="absolute inset-0" onClick={onClose} />
+      <button type="button" tabIndex={-1} aria-label="Close image preview" className="absolute inset-0 cursor-default" onClick={onClose} />
 
       {/* Main Container */}
-      <div className="relative z-10 w-full max-w-5xl bg-[#121318] border border-white/10 rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div className="relative z-10 w-full max-w-5xl bg-graphite-lighter border border-white/10 rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
         
         {/* Top Header */}
         <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-[#0e0f13]">
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 text-[9px] uppercase tracking-widest bg-white/5 text-[#c5a880] border border-white/10 rounded font-mono">
+            <span className="px-2 py-0.5 text-[9px] uppercase tracking-widest bg-white/5 text-gold-500 border border-white/10 rounded font-mono">
               {visual.category}
             </span>
-            <span className="text-xs text-[#a09c91] hidden sm:inline">
+            <span className="text-xs text-stone-600 hidden sm:inline">
               {visual.subcategory}
             </span>
           </div>
 
+          <span aria-live="polite" aria-label={`Image ${currentIndex + 1} of ${totalCount}`} className="mr-3 text-xs text-stone-500">
+            {String(currentIndex + 1).padStart(2, '0')} / {String(totalCount).padStart(2, '0')}
+          </span>
+
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+            className="min-h-11 min-w-11 flex items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
             aria-label="Close image viewer"
           >
             <X className="w-5 h-5" />
@@ -73,7 +85,17 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
         </div>
 
         {/* Image Display Area with Prev/Next Navigation */}
-        <div className="relative flex-1 bg-black/60 flex items-center justify-center min-h-[320px] max-h-[68vh] overflow-hidden p-2 sm:p-6">
+        <div
+          className="relative flex-1 bg-black/60 flex items-center justify-center min-h-[320px] max-h-[68vh] overflow-hidden p-2 sm:p-6"
+          onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
+          onTouchEnd={(event) => {
+            if (touchStartX.current === null) return;
+            const delta = event.changedTouches[0]?.clientX - touchStartX.current;
+            if (delta < -55 && hasNext) onNext();
+            if (delta > 55 && hasPrev) onPrev();
+            touchStartX.current = null;
+          }}
+        >
           <img
             src={visual.imageUrl}
             alt={visual.alt}
@@ -83,11 +105,12 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
           {/* Navigation Controls */}
           {hasPrev && (
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onPrev();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/90 border border-white/10 transition-all"
+              className="absolute left-4 top-1/2 -translate-y-1/2 min-h-11 min-w-11 p-2.5 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/90 border border-white/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -96,11 +119,12 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
 
           {hasNext && (
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onNext();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/90 border border-white/10 transition-all"
+              className="absolute right-4 top-1/2 -translate-y-1/2 min-h-11 min-w-11 p-2.5 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/90 border border-white/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
@@ -111,17 +135,17 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
         {/* Bottom Metadata & Required Attribution Bar */}
         <div className="px-5 py-4 border-t border-white/10 bg-[#0e0f13] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
           <div>
-            <p className="text-sm font-serif text-[#fbf9f5] leading-snug">
+            <p className="text-sm font-serif text-ivory-soft leading-snug">
               {visual.alt}
             </p>
-            <div className="text-[#8e8a7f] text-[11px] mt-1 flex items-center gap-2 flex-wrap">
+            <div className="text-stone-700 text-[11px] mt-1 flex items-center gap-2 flex-wrap">
               <span>
                 Photo by{' '}
                 <a
                   href={visual.photographerUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#c5a880] hover:underline font-medium"
+                  className="text-gold-500 hover:underline font-medium"
                 >
                   {visual.photographer}
                 </a>
@@ -132,7 +156,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-end flex-shrink-0">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-end shrink-0">
             <a
               href={visual.sourceUrl}
               target="_blank"

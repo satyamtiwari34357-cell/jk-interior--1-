@@ -47,6 +47,28 @@ function toAspectRatio(value: unknown): number | null {
 
 export const REAL_PUBLISHED_PROJECTS: PublicProject[] = [];
 
+export function assertPublishableProject(
+  data: {
+    status?: string;
+    isConcept?: boolean;
+    images?: Array<{ source?: string; isConcept?: boolean }>;
+  },
+  existingImages?: Array<{ source: string; isConcept: boolean }>,
+) {
+  if (data.status !== "PUBLISHED") return;
+
+  const images = data.images ?? existingImages ?? [];
+  if (
+    data.isConcept ||
+    images.length === 0 ||
+    images.some((image) => image.source !== "JK_INTERIOR" || image.isConcept)
+  ) {
+    throw new Error(
+      "A project can be published only with verified JK Interior photography and no concept visuals.",
+    );
+  }
+}
+
 /**
  * Public Project Query Rule:
  * Strictly filter for status === 'PUBLISHED' and isConcept === false.
@@ -58,6 +80,7 @@ export async function getPublishedProjects(): Promise<PublicProject[]> {
         where: {
           status: "PUBLISHED",
           isConcept: false,
+          images: { some: { source: "JK_INTERIOR", isConcept: false } },
         },
         include: {
           images: {
@@ -120,6 +143,7 @@ export async function getProjectBySlug(
           slug,
           status: "PUBLISHED",
           isConcept: false,
+          images: { some: { source: "JK_INTERIOR", isConcept: false } },
         },
         include: {
           images: {
@@ -215,6 +239,7 @@ export async function getAllProjectsForAdmin(
  */
 export async function createProject(data: any) {
   if (!prisma) throw new Error("Database connection unavailable.");
+  assertPublishableProject(data);
 
   return await prisma.project.create({
     data: {
@@ -249,8 +274,8 @@ export async function createProject(data: any) {
           aspectRatio: toAspectRatio(img.aspectRatio) ?? 4 / 3,
           sortOrder: img.sortOrder ?? idx,
           isCover: Boolean(img.isCover),
-          source: img.source || "JK_INTERIOR",
-          isConcept: Boolean(img.isConcept),
+          source: img.source || "INSPIRATION",
+          isConcept: img.isConcept === true || img.source !== "JK_INTERIOR",
         })),
       },
     },
@@ -265,6 +290,16 @@ export async function createProject(data: any) {
  */
 export async function updateProject(id: string, data: any) {
   if (!prisma) throw new Error("Database connection unavailable.");
+
+  if (data.status === "PUBLISHED" && !Array.isArray(data.images)) {
+    const existingImages = await prisma.projectImage.findMany({
+      where: { projectId: id },
+      select: { source: true, isConcept: true },
+    });
+    assertPublishableProject(data, existingImages);
+  } else {
+    assertPublishableProject(data);
+  }
 
   // Clean existing images and replace with updated set
   if (data.images && Array.isArray(data.images)) {
@@ -308,8 +343,8 @@ export async function updateProject(id: string, data: any) {
               aspectRatio: toAspectRatio(img.aspectRatio) ?? 4 / 3,
               sortOrder: img.sortOrder ?? idx,
               isCover: Boolean(img.isCover),
-              source: img.source || "JK_INTERIOR",
-              isConcept: Boolean(img.isConcept),
+              source: img.source || "INSPIRATION",
+              isConcept: img.isConcept === true || img.source !== "JK_INTERIOR",
             })),
           }
         : undefined,

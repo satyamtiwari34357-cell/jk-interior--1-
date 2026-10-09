@@ -48,13 +48,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0d] text-[#ede9e1] flex flex-col lg:flex-row font-sans selection:bg-[#c5a880] selection:text-black">
+    <div className="min-h-screen bg-dark-900 text-porcelain flex flex-col lg:flex-row font-sans selection:bg-gold-500 selection:text-black">
       
       {/* Mobile Top Header */}
-      <div className="lg:hidden bg-[#111218] border-b border-white/10 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+      <div className="lg:hidden bg-ink border-b border-white/10 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <span className="font-serif text-lg text-white font-semibold">JK Interior</span>
-          <span className="text-[10px] uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded text-[#c5a880]">CMS</span>
+          <span className="text-[10px] uppercase tracking-wider bg-white/10 px-2 py-0.5 rounded text-gold-500">CMS</span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -69,7 +69,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0f1015] border-r border-white/10 flex flex-col justify-between transform transition-transform duration-300 lg:translate-x-0 lg:static ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-ink border-r border-white/10 flex flex-col justify-between transform transition-transform duration-300 lg:translate-x-0 lg:static ${
           mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -77,10 +77,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Brand Logo in Sidebar */}
           <div className="p-6 border-b border-white/10 flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-serif text-[#fbf9f5] font-semibold tracking-wider">
+              <h1 className="text-xl font-serif text-ivory-soft font-semibold tracking-wider">
                 JK INTERIOR
               </h1>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#c5a880] block font-sans mt-0.5">
+              <span className="text-[9px] uppercase tracking-[0.2em] text-gold-500 block font-sans mt-0.5">
                 Studio CMS · Mumbai
               </span>
             </div>
@@ -106,17 +106,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   }}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-[#c5a880] text-[#0a0a0c] font-semibold shadow-md'
-                      : 'text-[#a8a396] hover:text-[#fbf9f5] hover:bg-white/5'
+                      ? 'bg-gold-500 text-dark-900 font-semibold shadow-md'
+                      : 'text-stone-500 hover:text-ivory-soft hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 flex-shrink-0" />
+                    <Icon className="w-4 h-4 shrink-0" />
                     <span>{item.label}</span>
                   </div>
                   {item.badge !== undefined && item.badge > 0 && (
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      isActive ? 'bg-black text-[#c5a880]' : 'bg-[#c5a880] text-black'
+                      isActive ? 'bg-black text-gold-500' : 'bg-gold-500 text-black'
                     }`}>
                       {item.badge}
                     </span>
@@ -130,15 +130,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* User Info & Footer Actions */}
         <div className="p-4 border-t border-white/10 space-y-3">
           <div className="p-3 rounded-lg bg-white/5 border border-white/5">
-            <span className="text-[10px] text-[#8e8a7f] uppercase block">Authenticated As</span>
-            <span className="text-xs text-[#fbf9f5] font-medium block truncate mt-0.5">{adminUser.name}</span>
-            <span className="text-[10px] text-[#c5a880] block font-mono">{adminUser.email}</span>
+            <span className="text-[10px] text-stone-700 uppercase block">Authenticated As</span>
+            <span className="text-xs text-ivory-soft font-medium block truncate mt-0.5">{adminUser.name}</span>
+            <span className="text-[10px] text-gold-500 block font-mono">{adminUser.email}</span>
           </div>
 
           <div className="flex flex-col gap-1.5 text-xs">
             <button
               onClick={onViewPublicSite}
-              className="w-full py-2 px-3 text-[#a8a396] hover:text-white hover:bg-white/5 rounded flex items-center justify-between transition-colors"
+              className="w-full py-2 px-3 text-stone-500 hover:text-white hover:bg-white/5 rounded flex items-center justify-between transition-colors"
             >
               <span>View Public Website</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -159,11 +159,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Desktop Topbar */}
-        <header className="hidden lg:flex items-center justify-between px-8 py-4 border-b border-white/10 bg-[#0c0d12]">
-          <div className="flex items-center gap-2 text-xs text-[#8e8a7f]">
+        <header className="hidden lg:flex items-center justify-between px-8 py-4 border-b border-white/10 bg-obsidian">
+          <div className="flex items-center gap-2 text-xs text-stone-700">
             <span>CMS</span>
             <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-[#fbf9f5] uppercase tracking-wider font-medium">
+            <span className="text-ivory-soft uppercase tracking-wider font-medium">
               {currentTab}
             </span>
           </div>
@@ -171,10 +171,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <div className="flex items-center gap-4">
             <button
               onClick={onViewPublicSite}
-              className="px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-[#f5f2eb] rounded flex items-center gap-2 transition-colors"
+              className="px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-ivory rounded flex items-center gap-2 transition-colors"
             >
               <span>Preview Public Website</span>
-              <ExternalLink className="w-3.5 h-3.5 text-[#c5a880]" />
+              <ExternalLink className="w-3.5 h-3.5 text-gold-500" />
             </button>
 
             <button

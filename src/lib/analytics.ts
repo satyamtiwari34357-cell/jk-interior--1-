@@ -16,10 +16,15 @@ export type AnalyticsEventType =
   | 'consultation_step_completed'
   | 'consultation_form_completed'
   | 'consultation_form_failed'
+  | 'consultation_started'
+  | 'consultation_completed'
   | 'whatsapp_clicked'
   | 'phone_clicked'
   | 'email_clicked'
   | 'project_filter_used'
+  | 'project_viewed'
+  | 'style_quiz_started'
+  | 'style_quiz_completed'
   | 'project_gallery_opened';
 
 let isInitialized = false;

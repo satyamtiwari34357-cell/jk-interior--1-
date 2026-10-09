@@ -53,8 +53,8 @@ export async function createMediaRecord(data: any) {
       format: data.format || "jpg",
       mimeType: data.mimeType || "image/jpeg",
       folder: data.folder || "jk-interior/media",
-      source: data.source || "JK_INTERIOR",
-      isConcept: Boolean(data.isConcept),
+      source: data.source || "INSPIRATION",
+      isConcept: data.isConcept === true || data.source !== "JK_INTERIOR",
     },
   });
 }

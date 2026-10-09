@@ -66,10 +66,10 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <h2 className="text-2xl font-serif text-[#fbf9f5]">
+          <h2 className="text-2xl font-serif text-ivory-soft">
             Architectural Services Management
           </h2>
-          <p className="text-xs text-[#9f9b90] mt-0.5">
+          <p className="text-xs text-stone-600 mt-0.5">
             Manage the six confirmed JK Interior turnkey disciplines and public
             presentations.
           </p>
@@ -78,8 +78,8 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
 
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">
+          <Loader2 className="w-8 h-8 text-gold-500 animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-widest text-stone-700">
             Loading services...
           </p>
         </div>
@@ -88,7 +88,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
           {services.map((service, idx) => (
             <div
               key={service.slug}
-              className="bg-[#121319] border border-white/5 rounded-xl overflow-hidden flex flex-col justify-between"
+              className="bg-graphite border border-white/5 rounded-xl overflow-hidden flex flex-col justify-between"
             >
               <div>
                 <div className="relative aspect-[16/10] w-full bg-black/40 overflow-hidden">
@@ -97,7 +97,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                     alt={service.name}
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-3 left-3 text-[10px] font-mono text-[#c5a880] bg-black/70 px-2 py-0.5 rounded border border-white/10">
+                  <span className="absolute top-3 left-3 text-[10px] font-mono text-gold-500 bg-black/70 px-2 py-0.5 rounded border border-white/10">
                     Discipline 0{idx + 1}
                   </span>
                   <span
@@ -112,10 +112,10 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                 </div>
 
                 <div className="p-5 space-y-2">
-                  <h3 className="text-lg font-serif text-[#fbf9f5]">
+                  <h3 className="text-lg font-serif text-ivory-soft">
                     {service.name}
                   </h3>
-                  <p className="text-xs text-[#a09c91] leading-relaxed line-clamp-2">
+                  <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
                     {service.shortDescription}
                   </p>
                 </div>
@@ -126,7 +126,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                   onClick={() => setEditingService(service)}
                   className="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold rounded border border-white/10 flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Edit2 className="w-3.5 h-3.5 text-[#c5a880]" />
+                  <Edit2 className="w-3.5 h-3.5 text-gold-500" />
                   <span>Edit Discipline</span>
                 </button>
               </div>
@@ -138,9 +138,9 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
       {/* Edit Modal */}
       {editingService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg bg-[#14151b] border border-white/10 rounded-xl p-6 space-y-4">
+          <div className="relative w-full max-w-lg bg-graphite-strong border border-white/10 rounded-xl p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-lg font-serif text-[#fbf9f5]">
+              <h3 className="text-lg font-serif text-ivory-soft">
                 Edit Service Discipline
               </h3>
               <button
@@ -153,7 +153,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
-                <label className="block text-[#8e8a7f] uppercase mb-1">
+                <label className="block text-stone-700 uppercase mb-1">
                   Discipline Name
                 </label>
                 <input
@@ -166,12 +166,12 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                       name: e.target.value,
                     })
                   }
-                  className="w-full bg-[#181a22] border border-white/10 rounded px-3 py-2 text-white"
+                  className="w-full bg-graphite-deep border border-white/10 rounded px-3 py-2 text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-[#8e8a7f] uppercase mb-1">
+                <label className="block text-stone-700 uppercase mb-1">
                   Short Description
                 </label>
                 <input
@@ -183,12 +183,12 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                       shortDescription: e.target.value,
                     })
                   }
-                  className="w-full bg-[#181a22] border border-white/10 rounded px-3 py-2 text-white"
+                  className="w-full bg-graphite-deep border border-white/10 rounded px-3 py-2 text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-[#8e8a7f] uppercase mb-1">
+                <label className="block text-stone-700 uppercase mb-1">
                   Full Description
                 </label>
                 <textarea
@@ -200,12 +200,12 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                       description: e.target.value,
                     })
                   }
-                  className="w-full bg-[#181a22] border border-white/10 rounded px-3 py-2 text-white"
+                  className="w-full bg-graphite-deep border border-white/10 rounded px-3 py-2 text-white"
                 />
               </div>
 
               <div>
-                <label className="block text-[#8e8a7f] uppercase mb-1">
+                <label className="block text-stone-700 uppercase mb-1">
                   Cover Image URL
                 </label>
                 <input
@@ -217,7 +217,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                       image: e.target.value,
                     })
                   }
-                  className="w-full bg-[#181a22] border border-white/10 rounded px-3 py-2 text-white"
+                  className="w-full bg-graphite-deep border border-white/10 rounded px-3 py-2 text-white"
                 />
               </div>
 
@@ -249,7 +249,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ token }) => {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-5 py-2 bg-[#c5a880] text-black font-semibold uppercase tracking-wider rounded"
+                  className="px-5 py-2 bg-gold-500 text-black font-semibold uppercase tracking-wider rounded"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>

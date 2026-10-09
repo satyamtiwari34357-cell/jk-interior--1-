@@ -9,9 +9,8 @@ export interface SeoMetadataOptions {
 
 const DEFAULT_SEO = {
   title: 'JK Interior | Interior Design Studio in Mumbai',
-  description: 'Contemporary luxury interior design, architecture, and turnkey craftsmanship studio in Mumbai established by master craftsman Kishorilal Sharma with 20+ years of dedicated practice.',
-  siteUrl: typeof window !== 'undefined' ? window.location.origin : 'https://jkinterior.in',
-  defaultOgImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
+  description: 'JK Interior creates residential and commercial interiors across Mumbai.',
+  siteUrl: typeof window !== 'undefined' ? window.location.origin : 'https://jkinterior.in'
 };
 
 /**
@@ -28,7 +27,7 @@ export function updatePageSeo(options: SeoMetadataOptions = {}) {
     : typeof window !== 'undefined'
     ? `${window.location.origin}${window.location.pathname}`
     : siteUrl;
-  const ogImageUrl = options.ogImage || DEFAULT_SEO.defaultOgImage;
+  const ogImageUrl = options.ogImage;
 
   // 1. Page Title
   document.title = pageTitle;
@@ -67,7 +66,11 @@ export function updatePageSeo(options: SeoMetadataOptions = {}) {
   setMetaProperty('og:url', canonicalUrl);
   setMetaProperty('og:type', options.type || 'website');
   setMetaProperty('og:site_name', 'JK Interior');
-  setMetaProperty('og:image', ogImageUrl);
+  if (ogImageUrl) {
+    setMetaProperty('og:image', ogImageUrl);
+  } else {
+    document.querySelector('meta[property="og:image"]')?.remove();
+  }
 
   // 5. Twitter Card Tags
   const setMetaName = (name: string, content: string) => {
@@ -83,7 +86,11 @@ export function updatePageSeo(options: SeoMetadataOptions = {}) {
   setMetaName('twitter:card', 'summary_large_image');
   setMetaName('twitter:title', pageTitle);
   setMetaName('twitter:description', pageDescription);
-  setMetaName('twitter:image', ogImageUrl);
+  if (ogImageUrl) {
+    setMetaName('twitter:image', ogImageUrl);
+  } else {
+    document.querySelector('meta[name="twitter:image"]')?.remove();
+  }
 
   // 6. Schema.org Structured Data
   let ldJsonScript = document.getElementById('jk-structured-data');
@@ -105,25 +112,10 @@ export function updatePageSeo(options: SeoMetadataOptions = {}) {
     },
     'description': pageDescription,
     'url': siteUrl,
-    'telephone': '+91-98201-23456',
-    'address': {
-      '@type': 'PostalAddress',
-      'streetAddress': 'Sun Mill Compound, Senapati Bapat Marg, Lower Parel West',
-      'addressLocality': 'Mumbai',
-      'addressRegion': 'Maharashtra',
-      'postalCode': '400013',
-      'addressCountry': 'IN'
-    },
-    'geo': {
-      '@type': 'GeoCoordinates',
-      'latitude': '18.9986',
-      'longitude': '72.8258'
-    },
     'areaServed': {
       '@type': 'City',
       'name': 'Mumbai'
-    },
-    'priceRange': '$$$$'
+    }
   };
 
   // If breadcrumbs are provided, include BreadcrumbList

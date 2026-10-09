@@ -113,17 +113,17 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <h2 className="text-2xl font-serif text-[#fbf9f5]">
+          <h2 className="text-2xl font-serif text-ivory-soft">
             Project Management
           </h2>
-          <p className="text-xs text-[#9f9b90] mt-0.5">
+          <p className="text-xs text-stone-600 mt-0.5">
             Manage real JK Interior turnkeys and development concept studies.
           </p>
         </div>
 
         <button
           onClick={() => setIsCreatingNew(true)}
-          className="px-4 py-2 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-[#c5a880]/15"
+          className="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-black text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-gold-500/15"
         >
           <Plus className="w-4 h-4" />
           <span>Add Project</span>
@@ -139,14 +139,14 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search projects by title, precinct, or slug..."
-            className="w-full bg-[#121319] border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-[#c5a880] focus:outline-none"
+            className="w-full bg-graphite border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-gold-500 focus:outline-none"
           />
         </div>
 
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-[#121319] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-[#c5a880] focus:outline-none"
+          className="bg-graphite border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-gold-500 focus:outline-none"
         >
           <option value="ALL">All Categories</option>
           <option value="Penthouse">Penthouse</option>
@@ -158,7 +158,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-[#121319] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-[#c5a880] focus:outline-none"
+          className="bg-graphite border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-gold-500 focus:outline-none"
         >
           <option value="ALL">All Statuses</option>
           <option value="PUBLISHED">Published</option>
@@ -169,20 +169,20 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
       {/* Projects Table */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">Loading projects...</p>
+          <Loader2 className="w-8 h-8 text-gold-500 animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-widest text-stone-700">Loading projects...</p>
         </div>
       ) : projects.length === 0 ? (
-        <div className="py-16 text-center text-[#8e8a7f] space-y-3 bg-[#121319] rounded-xl border border-white/5 p-8">
-          <FolderKanban className="w-8 h-8 text-[#c5a880]/40 mx-auto" />
-          <p className="text-base font-serif text-[#fbf9f5]">No projects found.</p>
-          <p className="text-xs text-[#6e6a60]">Click "Add Project" to register your first turnkey architecture project.</p>
+        <div className="py-16 text-center text-stone-700 space-y-3 bg-graphite rounded-xl border border-white/5 p-8">
+          <FolderKanban className="w-8 h-8 text-gold-500/40 mx-auto" />
+          <p className="text-base font-serif text-ivory-soft">No projects found.</p>
+          <p className="text-xs text-warm-grey">Click "Add Project" to register your first turnkey architecture project.</p>
         </div>
       ) : (
-        <div className="bg-[#121319] rounded-xl border border-white/5 overflow-hidden">
+        <div className="bg-graphite rounded-xl border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#cfc9be]">
-              <thead className="text-[10px] uppercase tracking-wider text-[#8e8a7f] bg-white/5 border-b border-white/5">
+            <table className="w-full text-left text-xs text-taupe">
+              <thead className="text-[10px] uppercase tracking-wider text-stone-700 bg-white/5 border-b border-white/5">
                 <tr>
                   <th className="py-3.5 px-4">Project</th>
                   <th className="py-3.5 px-4">Category</th>
@@ -202,13 +202,13 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
                           <img
                             src={coverImg?.url || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=200&q=80'}
                             alt={proj.title}
-                            className="w-12 h-10 object-cover rounded bg-black/40 flex-shrink-0"
+                            className="w-12 h-10 object-cover rounded bg-black/40 shrink-0"
                           />
                           <div>
-                            <span className="font-serif text-sm text-[#fbf9f5] block font-medium">
+                            <span className="font-serif text-sm text-ivory-soft block font-medium">
                               {proj.title}
                             </span>
-                            <span className="text-[10px] font-mono text-[#8e8a7f]">
+                            <span className="text-[10px] font-mono text-stone-700">
                               /{proj.slug}
                             </span>
                           </div>
@@ -217,7 +217,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ token }) => {
                       <td className="py-3.5 px-4">{proj.category}</td>
                       <td className="py-3.5 px-4">{proj.location}</td>
                       <td className="py-3.5 px-4">
-                        <span className="text-xs font-mono text-[#a8a396]">
+                        <span className="text-xs font-mono text-stone-500">
                           {proj.images?.length || 0}
                         </span>
                       </td>

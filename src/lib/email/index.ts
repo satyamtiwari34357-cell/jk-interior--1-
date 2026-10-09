@@ -21,7 +21,7 @@ export async function sendLeadNotificationEmail(
   leadId: string,
 ): Promise<boolean> {
   const notifyEmail = process.env.LEADS_NOTIFICATION_EMAIL?.trim() || "";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 
   if (!notifyEmail) {
     console.warn(
@@ -109,22 +109,20 @@ export async function sendCustomerConfirmationEmail(
         Dear ${name},
       </p>
       <p style="color: #cfc9be; font-size: 14px; line-height: 1.6;">
-        Thank you for sharing your project details with JK Interior. Our executive design desk, founded by Kishorilal Sharma, has received your inquiry for your <strong>${projectType}</strong> in <strong>${location}</strong>.
+        We have received your inquiry for your <strong>${projectType}</strong> in <strong>${location}</strong>.
       </p>
       <p style="color: #cfc9be; font-size: 14px; line-height: 1.6;">
-        One of our senior interior architects will contact you shortly to review your layout and discuss our in-house workshop joinery and turnkey process.
+        Our team will contact you about your enquiry.
       </p>
 
       <div style="margin: 28px 0; padding: 16px; border-top: 1px solid #22232d; border-bottom: 1px solid #22232d;">
         <p style="margin: 0; font-size: 12px; color: #9f9b90;">
-          <strong>JK Interior Atelier & Joinery Works</strong><br>
-          Sun Mill Compound, Lower Parel West, Mumbai 400013<br>
-          Direct Desk: +91 98201 23456
+          <strong>JK Interior</strong>
         </p>
       </div>
 
       <p style="font-size: 11px; color: #6e6a60; text-align: center;">
-        Contemporary luxury interior design, architecture, and turnkey craftsmanship in Mumbai.
+        Residential and commercial interiors in Mumbai.
       </p>
     </div>
   `;

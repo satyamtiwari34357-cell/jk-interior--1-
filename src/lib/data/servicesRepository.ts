@@ -1,4 +1,5 @@
 import { prisma } from "../prisma.ts";
+import { SERVICE_DATA } from "../../data/customerExperience.ts";
 
 export interface ServiceItem {
   id: string;
@@ -11,7 +12,14 @@ export interface ServiceItem {
   published: boolean;
 }
 
-export const FALLBACK_CONFIRMED_SERVICES: ServiceItem[] = [];
+export const FALLBACK_CONFIRMED_SERVICES: ServiceItem[] = SERVICE_DATA.map(
+  (service) => ({
+    id: service.slug,
+    ...service,
+    description: service.shortDescription,
+    published: true,
+  }),
+);
 
 export async function getPublishedServices(): Promise<ServiceItem[]> {
   try {

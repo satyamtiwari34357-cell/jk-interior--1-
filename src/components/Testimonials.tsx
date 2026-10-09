@@ -5,9 +5,9 @@ type TestimonialRecord = {
   id: string;
   clientName: string;
   quote: string;
-  residence?: string | null;
-  location?: string | null;
-  avatarUrl?: string | null;
+  projectName?: string | null;
+  role?: string | null;
+  image?: string | null;
 };
 
 export const Testimonials: React.FC = () => {
@@ -28,13 +28,13 @@ export const Testimonials: React.FC = () => {
 
   if (testimonials.length === 0) {
     return (
-      <section className="py-24 px-6 md:px-10 bg-[#0e0f14] border-t border-white/5">
+      <section className="py-24 px-6 md:px-10 bg-ink-soft border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#c5a880] block mb-2 font-medium">
-              Patron Reflections
+            <span className="text-xs uppercase tracking-[0.25em] text-gold-500 block mb-2 font-medium">
+              Client Feedback
             </span>
-            <h2 className="text-3xl sm:text-4xl font-serif text-[#fbf9f5] font-light">
+            <h2 className="text-3xl sm:text-4xl font-serif text-ivory-soft font-light">
               Client testimonials will be published here once approved.
             </h2>
           </div>
@@ -44,14 +44,14 @@ export const Testimonials: React.FC = () => {
   }
 
   return (
-    <section className="py-24 px-6 md:px-10 bg-[#0e0f14] border-t border-white/5">
+    <section className="py-24 px-6 md:px-10 bg-ink-soft border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#c5a880] block mb-2 font-medium">
-            Patron Reflections
+          <span className="text-xs uppercase tracking-[0.25em] text-gold-500 block mb-2 font-medium">
+            Client Feedback
           </span>
-          <h2 className="text-3xl sm:text-4xl font-serif text-[#fbf9f5] font-light">
-            Entrusted by Mumbai’s Discerning Homeowners
+          <h2 className="text-3xl sm:text-4xl font-serif text-ivory-soft font-light">
+            What clients say
           </h2>
         </div>
 
@@ -59,30 +59,29 @@ export const Testimonials: React.FC = () => {
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="p-8 rounded-xl bg-[#13141a] border border-white/5 flex flex-col justify-between space-y-6 hover:border-[#c5a880]/30 transition-colors"
+              className="p-8 rounded-xl bg-graphite border border-white/5 flex flex-col justify-between space-y-6 hover:border-gold-500/30 transition-colors"
             >
               <div className="space-y-4">
-                <Quote className="w-8 h-8 text-[#c5a880]/40" />
+                <Quote className="w-8 h-8 text-gold-500/40" />
                 <p className="text-sm font-serif italic text-[#ded9cf] leading-relaxed">
                   "{t.quote}"
                 </p>
               </div>
 
               <div className="flex items-center gap-3.5 pt-4 border-t border-white/5">
-                {t.avatarUrl && (
+                {t.image && (
                   <img
-                    src={t.avatarUrl}
+                    src={t.image}
                     alt={t.clientName}
                     className="w-11 h-11 rounded-full object-cover border border-white/10"
                   />
                 )}
                 <div>
-                  <h4 className="text-sm font-serif text-[#fbf9f5] font-medium">
+                  <h4 className="text-sm font-serif text-ivory-soft font-medium">
                     {t.clientName}
                   </h4>
-                  <span className="text-[11px] text-[#8e8a7f] block">
-                    {t.residence || "Client"}
-                    {t.location ? ` · ${t.location}` : ""}
+                  <span className="text-[11px] text-stone-700 block">
+                    {t.projectName || t.role || "Client"}
                   </span>
                 </div>
               </div>

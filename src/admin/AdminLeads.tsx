@@ -112,10 +112,10 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <h2 className="text-2xl font-serif text-[#fbf9f5]">
+          <h2 className="text-2xl font-serif text-ivory-soft">
             Consultation Enquiries & Leads
           </h2>
-          <p className="text-xs text-[#9f9b90] mt-0.5">
+          <p className="text-xs text-stone-600 mt-0.5">
             Prospective homeowner submissions received through Book a Consultation.
           </p>
         </div>
@@ -130,14 +130,14 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by client name, contact number, or location..."
-            className="w-full bg-[#121319] border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-[#c5a880] focus:outline-none"
+            className="w-full bg-graphite border border-white/10 rounded-lg pl-10 pr-3.5 py-2 text-xs text-white placeholder-white/30 focus:border-gold-500 focus:outline-none"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-[#121319] border border-white/10 rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#c5a880] focus:outline-none"
+          className="bg-graphite border border-white/10 rounded-lg px-3.5 py-2 text-xs text-white focus:border-gold-500 focus:outline-none"
         >
           <option value="ALL">All Statuses</option>
           {leadStatuses.map((st) => (
@@ -151,20 +151,20 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
       {/* Leads Table */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <Loader2 className="w-8 h-8 text-[#c5a880] animate-spin mx-auto" />
-          <p className="text-xs uppercase tracking-widest text-[#8e8a7f]">Loading enquiries...</p>
+          <Loader2 className="w-8 h-8 text-gold-500 animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-widest text-stone-700">Loading enquiries...</p>
         </div>
       ) : leads.length === 0 ? (
-        <div className="py-16 text-center text-[#8e8a7f] space-y-3 bg-[#121319] rounded-xl border border-white/5 p-8">
-          <Users className="w-8 h-8 text-[#c5a880]/40 mx-auto" />
-          <p className="text-base font-serif text-[#fbf9f5]">No enquiries yet.</p>
-          <p className="text-xs text-[#6e6a60]">When prospective clients submit the consultation form, they will appear here.</p>
+        <div className="py-16 text-center text-stone-700 space-y-3 bg-graphite rounded-xl border border-white/5 p-8">
+          <Users className="w-8 h-8 text-gold-500/40 mx-auto" />
+          <p className="text-base font-serif text-ivory-soft">No enquiries yet.</p>
+          <p className="text-xs text-warm-grey">When prospective clients submit the consultation form, they will appear here.</p>
         </div>
       ) : (
-        <div className="bg-[#121319] rounded-xl border border-white/5 overflow-hidden">
+        <div className="bg-graphite rounded-xl border border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#cfc9be]">
-              <thead className="text-[10px] uppercase tracking-wider text-[#8e8a7f] bg-white/5 border-b border-white/5">
+            <table className="w-full text-left text-xs text-taupe">
+              <thead className="text-[10px] uppercase tracking-wider text-stone-700 bg-white/5 border-b border-white/5">
                 <tr>
                   <th className="py-3.5 px-4">Client</th>
                   <th className="py-3.5 px-4">Project</th>
@@ -185,17 +185,17 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                   >
                     <td className="py-3.5 px-4">
                       <strong className="text-white block font-medium">{lead.name}</strong>
-                      <span className="text-[11px] text-[#8e8a7f]">{lead.phone}</span>
+                      <span className="text-[11px] text-stone-700">{lead.phone}</span>
                     </td>
                     <td className="py-3.5 px-4">
                       <span className="text-white font-medium block">{lead.projectType}</span>
                       {lead.carpetAreaRange && (
-                        <span className="text-[11px] text-[#8e8a7f]">{lead.carpetAreaRange}</span>
+                        <span className="text-[11px] text-stone-700">{lead.carpetAreaRange}</span>
                       )}
                     </td>
                     <td className="py-3.5 px-4">{lead.location}</td>
-                    <td className="py-3.5 px-4 text-[#c5a880]">{lead.budgetRange || 'Not specified'}</td>
-                    <td className="py-3.5 px-4 text-[#8e8a7f]">{lead.timeline || 'Immediate'}</td>
+                    <td className="py-3.5 px-4 text-gold-500">{lead.budgetRange || 'Not specified'}</td>
+                    <td className="py-3.5 px-4 text-stone-700">{lead.timeline || 'Immediate'}</td>
                     <td className="py-3.5 px-4">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono font-medium ${
@@ -213,11 +213,11 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                         {lead.status}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-[#78746c] text-[11px]">
+                    <td className="py-3.5 px-4 text-stone-700 text-[11px]">
                       {new Date(lead.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <button className="text-xs text-[#c5a880] hover:underline font-medium">
+                      <button className="text-xs text-gold-500 hover:underline font-medium">
                         View Details →
                       </button>
                     </td>
@@ -231,16 +231,16 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
 
       {/* Side-Panel Lead Detail Drawer */}
       {selectedLead && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-[#111218] border-l border-white/10 shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-ink border-l border-white/10 shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-300">
           
           <div className="space-y-6">
             {/* Top Bar */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div>
-                <span className="text-[10px] uppercase tracking-widest text-[#c5a880] font-sans">
+                <span className="text-[10px] uppercase tracking-widest text-gold-500 font-sans">
                   Enquiry ID: {selectedLead.id.slice(0, 12)}
                 </span>
-                <h3 className="text-xl font-serif text-[#fbf9f5] mt-0.5">
+                <h3 className="text-xl font-serif text-ivory-soft mt-0.5">
                   {selectedLead.name}
                 </h3>
               </div>
@@ -259,7 +259,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                   href={`tel:${selectedLead.phone}`}
                   className="py-2.5 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-white flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Phone className="w-3.5 h-3.5 text-[#c5a880]" />
+                  <Phone className="w-3.5 h-3.5 text-gold-500" />
                   <span>Call</span>
                 </a>
               )}
@@ -268,7 +268,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                   href={getWhatsAppLink(selectedLead)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2.5 px-3 bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 rounded-lg text-xs text-[#25D366] flex items-center justify-center gap-1.5 transition-colors"
+                  className="py-2.5 px-3 bg-whatsapp/15 hover:bg-whatsapp/25 border border-[#25D366]/30 rounded-lg text-xs text-[#25D366] flex items-center justify-center gap-1.5 transition-colors"
                 >
                   <MessageSquare className="w-3.5 h-3.5 fill-current" />
                   <span>WhatsApp</span>
@@ -279,7 +279,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                   href={`mailto:${selectedLead.email}`}
                   className="py-2.5 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-white flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Mail className="w-3.5 h-3.5 text-[#c5a880]" />
+                  <Mail className="w-3.5 h-3.5 text-gold-500" />
                   <span>Email</span>
                 </a>
               ) : (
@@ -290,50 +290,50 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
             </div>
 
             {/* Section 1: Customer Contact */}
-            <div className="p-4 rounded-lg bg-[#161720] border border-white/5 space-y-2 text-xs">
-              <h4 className="text-[10px] uppercase tracking-wider text-[#8e8a7f] font-semibold">
+            <div className="p-4 rounded-lg bg-graphite-deep border border-white/5 space-y-2 text-xs">
+              <h4 className="text-[10px] uppercase tracking-wider text-stone-700 font-semibold">
                 Customer Information
               </h4>
-              <div className="grid grid-cols-2 gap-2 text-[#cfc9be]">
+              <div className="grid grid-cols-2 gap-2 text-taupe">
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Phone</span>
+                  <span className="text-stone-700 block text-[10px]">Phone</span>
                   <span>{selectedLead.phone}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Email</span>
+                  <span className="text-stone-700 block text-[10px]">Email</span>
                   <span>{selectedLead.email || 'None provided'}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Location</span>
+                  <span className="text-stone-700 block text-[10px]">Location</span>
                   <span>{selectedLead.location}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Customer Type</span>
+                  <span className="text-stone-700 block text-[10px]">Customer Type</span>
                   <span>{selectedLead.customerType || 'Homeowner'}</span>
                 </div>
               </div>
             </div>
 
             {/* Section 2: Project Scope */}
-            <div className="p-4 rounded-lg bg-[#161720] border border-white/5 space-y-2 text-xs">
-              <h4 className="text-[10px] uppercase tracking-wider text-[#c5a880] font-semibold">
+            <div className="p-4 rounded-lg bg-graphite-deep border border-white/5 space-y-2 text-xs">
+              <h4 className="text-[10px] uppercase tracking-wider text-gold-500 font-semibold">
                 Project Scope & Timeline
               </h4>
-              <div className="grid grid-cols-2 gap-2 text-[#cfc9be]">
+              <div className="grid grid-cols-2 gap-2 text-taupe">
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Project Type</span>
+                  <span className="text-stone-700 block text-[10px]">Project Type</span>
                   <span className="text-white font-medium">{selectedLead.projectType}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Carpet Area</span>
+                  <span className="text-stone-700 block text-[10px]">Carpet Area</span>
                   <span>{selectedLead.carpetAreaRange || 'Not specified'}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Estimated Budget</span>
-                  <span className="text-[#c5a880] font-medium">{selectedLead.budgetRange || 'Not specified'}</span>
+                  <span className="text-stone-700 block text-[10px]">Estimated Budget</span>
+                  <span className="text-gold-500 font-medium">{selectedLead.budgetRange || 'Not specified'}</span>
                 </div>
                 <div>
-                  <span className="text-[#78746c] block text-[10px]">Timeline</span>
+                  <span className="text-stone-700 block text-[10px]">Timeline</span>
                   <span>{selectedLead.timeline || 'Immediate'}</span>
                 </div>
               </div>
@@ -341,33 +341,33 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
 
             {/* Section 3: Requirements Message */}
             {selectedLead.message && (
-              <div className="p-4 rounded-lg bg-[#161720] border border-white/5 space-y-1.5 text-xs">
-                <h4 className="text-[10px] uppercase tracking-wider text-[#8e8a7f] font-semibold">
+              <div className="p-4 rounded-lg bg-graphite-deep border border-white/5 space-y-1.5 text-xs">
+                <h4 className="text-[10px] uppercase tracking-wider text-stone-700 font-semibold">
                   Client Design Notes
                 </h4>
-                <p className="text-[#cfc9be] leading-relaxed font-light">
+                <p className="text-taupe leading-relaxed font-light">
                   {selectedLead.message}
                 </p>
               </div>
             )}
 
             {/* Section 4: Management & Internal Notes (Admin Only) */}
-            <div className="p-4 rounded-lg bg-[#161720] border border-[#c5a880]/30 space-y-4">
+            <div className="p-4 rounded-lg bg-graphite-deep border border-gold-500/30 space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs uppercase tracking-wider text-[#c5a880] font-semibold">
+                <h4 className="text-xs uppercase tracking-wider text-gold-500 font-semibold">
                   Management Status & Internal Notes
                 </h4>
-                <span className="text-[10px] text-[#8e8a7f]">Admin Private</span>
+                <span className="text-[10px] text-stone-700">Admin Private</span>
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-[#8e8a7f] mb-1">
+                <label className="block text-[11px] uppercase tracking-wider text-stone-700 mb-1">
                   Lead Status
                 </label>
                 <select
                   value={currentStatus}
                   onChange={(e) => setCurrentStatus(e.target.value)}
-                  className="w-full bg-[#111218] border border-white/10 rounded px-3 py-2 text-xs text-white focus:border-[#c5a880] focus:outline-none"
+                  className="w-full bg-ink border border-white/10 rounded px-3 py-2 text-xs text-white focus:border-gold-500 focus:outline-none"
                 >
                   {leadStatuses.map((st) => (
                     <option key={st} value={st}>
@@ -378,7 +378,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-[#8e8a7f] mb-1">
+                <label className="block text-[11px] uppercase tracking-wider text-stone-700 mb-1">
                   Internal Atelier Notes (Never visible to client)
                 </label>
                 <textarea
@@ -386,7 +386,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                   value={internalNotes}
                   onChange={(e) => setInternalNotes(e.target.value)}
                   placeholder="e.g. Called client on Thursday. Site visit scheduled for Sunday at Worli Seaface. Looking for Statuario marble and bespoke walnut walk-in dressing suite."
-                  className="w-full bg-[#111218] border border-white/10 rounded px-3 py-2 text-xs text-white placeholder-white/30 focus:border-[#c5a880] focus:outline-none"
+                  className="w-full bg-ink border border-white/10 rounded px-3 py-2 text-xs text-white placeholder-white/30 focus:border-gold-500 focus:outline-none"
                 />
               </div>
 
@@ -394,7 +394,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
                 type="button"
                 onClick={handleUpdateLead}
                 disabled={savingNotes}
-                className="w-full py-2.5 bg-[#c5a880] hover:bg-[#d4b88f] text-black text-xs font-semibold uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-gold-500 hover:bg-gold-400 text-black text-xs font-semibold uppercase tracking-wider rounded transition-colors flex items-center justify-center gap-2"
               >
                 {savingNotes ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                 <span>Save Notes & Status</span>
@@ -403,7 +403,7 @@ export const AdminLeads: React.FC<AdminLeadsProps> = ({ token }) => {
 
           </div>
 
-          <div className="pt-6 border-t border-white/10 text-[11px] text-[#78746c] flex items-center justify-between">
+          <div className="pt-6 border-t border-white/10 text-[11px] text-stone-700 flex items-center justify-between">
             <span>Received: {new Date(selectedLead.createdAt).toLocaleString()}</span>
             <button
               onClick={() => setSelectedLead(null)}
